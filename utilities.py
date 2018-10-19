@@ -1,17 +1,50 @@
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
+from skimage.filters import gaussian
+from skimage.segmentation import active_contour
+from skimage.measure import grid_points_in_poly
 
 def read_hyperstack(fpath,dataset='channel1',tmax=166): 
+    '''
+    Read in an hdf5 hyperstack where each timepoint is a group
+    containing two channels which are saved as datapoints
+    '''
     
+    # Open file object
     f = h5py.File(fpath,'r')
+    
+    # Retrieve each timepoint from file object
     L = []
     for t in range(tmax+1):
         L.append(np.array(f.get('t'+str(t)).get(dataset)))
         
+    # Close h5 file
+    f.close()
+        
+    # Join all timepoints into a single numpy array to return
     return(np.stack(L))
 
+def write_hyperstack(fpath,dataset='channel1'):
+    '''
+    Write an h5 file in the same format as was read in
+    '''
+    
+    # Open new h5py file to add data to
+    f = h5py.File('../data/wt_gbe_20180110_mask.h5','w')
+
+    # Save each timepoint to a group/dataset in h5 file
+    for t in range(hst.shape[0]):
+        f.create_dataset('t'+str(t)+'/channel1', data=hst[t])
+
+    # close file
+    f.close()
+
 def imshow(img,figsize=(10,8)):
+    '''
+    Show image using matplotlib and including colorbar
+    '''
+    
     fig,ax = plt.subplots(figsize=figsize)
     cax = ax.imshow(img)
     plt.colorbar(cax)
