@@ -1,6 +1,9 @@
 import h5py
 import numpy as np
+from czifile import CziFile
+
 import matplotlib.pyplot as plt
+
 from skimage.filters import gaussian
 from skimage.segmentation import active_contour
 from skimage.measure import grid_points_in_poly
@@ -81,3 +84,53 @@ def contour_embryo(img,init):
     img[~mask] = 0
     
     return(img)
+
+class CziImport():
+    '''
+    Defines a class to wrap the czifile object
+    Identifies data contained in each dimension
+    Helps user extract desired data from multidimensional array
+    '''
+    
+    def __init__(self,fpath):
+        '''
+        Read in file using czifile
+        
+        Parameters
+        ----------
+            fpath : str
+                Complete or relative file path to czi file
+        '''
+        
+        with CziFile(fpath) as czi:
+            self.raw_im = czi.asarray()
+            
+        self.print_summary()
+        self.squeeze_data()
+                
+    def print_summary(self):
+        '''Prints a summary of data dimensions
+        Assumes that the data is a standard brightfield timelapse collection, e.g. (?, roi, channel, time, z, x, y, ?)
+        '''
+        
+        print('''
+            There are {0} ROIs,
+                       {1} channels and
+                       {2} timepoints.
+            '''.format(self.raw_im.shape[1],
+                      self.raw_im.shape[2],
+                      self.raw_im.shape[3]))
+              
+        print('''
+            The 3D dimensions of the data are:
+            {0} x {1} x {2} (zyx)
+            '''.format(self.raw_im.shape[-4],
+                      self.raw_im.shape[-3],
+                      self.raw_im.shape[-2]))
+        
+    def squeeze_data(self):
+        '''
+        Uses np.squeeze to reduce dimenions of data according to input preference
+        '''
+        
+        self.data = np.squeeze(self.raw_im)
