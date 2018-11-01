@@ -1,8 +1,10 @@
 data/
 .DS_Store
+*.m~
 
 # Avoid h5 files
 *.h5
+*.avi
 
 # Avoid large amounts of data accumulating from altair graphs
 *.json
