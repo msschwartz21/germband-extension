@@ -153,31 +153,37 @@ def tidy_vector_data(name):
         frame, x, y, vx, vy
     '''
     
-    # Read in csv files
+    # Read in csv files with x and y positions
     x = pd.read_csv(name+'_X.csv', header=None)
     y = pd.read_csv(name+'_Y.csv', header=None)
-    vx = pd.read_csv(name+'_Vx.csv', header=None)
-    vy = pd.read_csv(name+'_Vy.csv', header=None)
     
     # Concatenate x and y which contain the positions of vectors
     # Rename default column name to x or y
+    # Create position ID column for joining
     xy = pd.concat([x.rename(columns={0:'x'}),
                    y.rename(columns={0:'y'})
                    ],axis=1).reset_index(
-                  ).rename(columns={'index':'vector ID'})
+                  ).rename(columns={'index':'position ID'})
     
-    # Concatenate vx and vy functions after renaming columns
-    # Use pd.melt to get one vecter per row with a new frame column
-    vxvy = pd.concat([vx.melt(
-                        ).rename(columns={'value':'vx'}
-                        ).drop(columns=['variable']),
-                      vy.melt(
-                        ).rename(columns={'variable':'frame',
-                                         'value':'vy'})
-                    ],axis=1).reset_index(
-                  ).rename(columns={'index':'vector ID'})
+    # Define column subsets for melt function
+    id_vars = ['position ID','x','y']
+    value_vars = np.arange(0,166)
     
-    # Merge dataframe containing xy position with vxvy
-    vectors = vxvy.merge(xy)
+    # Read vx and vy
+    # Join with xy to add position values
+    vx = pd.read_csv(name+'_Vx.csv', header=None
+                    ).join(xy
+                    ).melt(id_vars=id_vars,
+                         value_vars=value_vars,
+                         var_name='frame',
+                         value_name='vx')
+    vy = pd.read_csv(name+'_Vy.csv', header=None
+                    ).join(xy
+                    ).melt(id_vars=id_vars,
+                         value_vars=value_vars,
+                         var_name='frame',
+                         value_name='vy')
+    
+    vectors = vx.merge(vy)
     
     return(vectors)
