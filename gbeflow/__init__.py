@@ -1,6 +1,7 @@
 import h5py
 import numpy as np
 from czifile import CziFile
+import pandas as pd
 
 import matplotlib.pyplot as plt
 
@@ -134,3 +135,47 @@ class CziImport():
         '''
         
         self.data = np.squeeze(self.raw_im)
+        
+def tidy_vector_data(name):
+    '''
+    Tidys csv files exported from matlab OpticalFlow
+    
+    Parameters
+    ----------
+    name : str
+        String specifying the name passed to OpticalFlowOutput 
+        Can include complete or partial path to file
+        
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe containing the following columns:
+        frame, x, y, vx, vy
+    '''
+    
+    # Read in csv files
+    x = pd.read_csv(name+'_X.csv', header=None)
+    y = pd.read_csv(name+'_Y.csv', header=None)
+    vx = pd.read_csv(name+'_Vx.csv', header=None)
+    vy = pd.read_csv(name+'_Vy.csv', header=None)
+    
+    # Concatenate x and y which contain the positions of vectors
+    # Rename default column name to x or y
+    xy = pd.concat([x.rename(columns={0:'x'}),
+                   y.rename(columns={0:'y'})
+                   ],axis=1)
+    
+    # Concatenate vx and vy functions after renaming columns
+    # Use pd.melt to get one vecter per row with a new frame column
+    vxvy = pd.concat([vx.melt(
+                        ).rename(columns={'value':'vx'}
+                        ).drop(columns=['variable']),
+                      vy.melt(
+                        ).rename(columns={'variable':'frame',
+                                         'value':'vy'})
+                    ],axis=1)
+    
+    # Merge dataframe containing xy position with vxvy
+    vectors = vxvy.merge(xy,left_on='frame',right_index=True)
+    
+    return(vectors)
