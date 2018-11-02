@@ -19,13 +19,15 @@ function output = ParamTest(MovieName,boxmin,boxmax,boxstep,blurmin,blurmax,blur
             BoxSize = boxes(j);
             disp(BlurSTD);
             disp(BoxSize);
-%             [X,Y,Vx,Vy,Mov] = OpticalFlow (MovieName,[],BoxSize,BlurSTD,ArrowSize,scale,dt,'none');
-%             
-%             obj = VideoWriter(strcat('box',num2str(BoxSize),'blur',num2str(BlurSTD)));
-%             obj.open();
-%             obj.writeVideo(Mov);
-%             obj.close();
-            disp('done');
+            [X,Y,Vx,Vy,Mov] = OpticalFlow (MovieName,[],BoxSize,BlurSTD,ArrowSize,scale,dt,'none');
+            
+            vname = strcat('box',num2str(BoxSize),'blur',num2str(BlurSTD),'.avi');
+             
+            obj = VideoWriter(vname);
+            obj.open();
+            obj.writeVideo(Mov);
+            obj.close();
+            disp(vname);
             
         end
     end

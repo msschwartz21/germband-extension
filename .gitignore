@@ -5,6 +5,8 @@ data/
 # Avoid h5 files
 *.h5
 *.avi
+*.csv
+*.txt
 
 # Avoid large amounts of data accumulating from altair graphs
 *.json
