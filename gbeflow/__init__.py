@@ -163,7 +163,8 @@ def tidy_vector_data(name):
     # Rename default column name to x or y
     xy = pd.concat([x.rename(columns={0:'x'}),
                    y.rename(columns={0:'y'})
-                   ],axis=1)
+                   ],axis=1).reset_index(
+                  ).rename(columns={'index':'vector ID'})
     
     # Concatenate vx and vy functions after renaming columns
     # Use pd.melt to get one vecter per row with a new frame column
@@ -173,9 +174,10 @@ def tidy_vector_data(name):
                       vy.melt(
                         ).rename(columns={'variable':'frame',
                                          'value':'vy'})
-                    ],axis=1)
+                    ],axis=1).reset_index(
+                  ).rename(columns={'index':'vector ID'})
     
     # Merge dataframe containing xy position with vxvy
-    vectors = vxvy.merge(xy,left_on='frame',right_index=True)
+    vectors = vxvy.merge(xy)
     
     return(vectors)
