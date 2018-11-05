@@ -29,17 +29,26 @@ def read_hyperstack(fpath,dataset='channel1',tmax=166):
     # Join all timepoints into a single numpy array to return
     return(np.stack(L))
 
-def write_hyperstack(fpath,dataset='channel1'):
+def write_hyperstack(hst,fpath,dataset='channel1'):
     '''
     Write an h5 file in the same format as was read in
+    
+    Parameters
+    ----------
+    hst : np.array
+        Array with dimensions txy
+    fpath : str
+        Complete path to output file with '.h5' 
+    dataset : str, optional
+        Specifies name of the dataset in h5 file
     '''
     
     # Open new h5py file to add data to
-    f = h5py.File('../data/wt_gbe_20180110_mask.h5','w')
+    f = h5py.File(fpath,'w')
 
     # Save each timepoint to a group/dataset in h5 file
     for t in range(hst.shape[0]):
-        f.create_dataset('t'+str(t)+'/channel1', data=hst[t])
+        f.create_dataset('t'+str(t)+'/'+dataset, data=hst[t])
 
     # close file
     f.close()
@@ -93,7 +102,7 @@ class CziImport():
     Helps user extract desired data from multidimensional array
     '''
     
-    def __init__(self,fpath):
+    def __init__(self,fpath,summary=True):
         '''
         Read in file using czifile
         
@@ -105,8 +114,10 @@ class CziImport():
         
         with CziFile(fpath) as czi:
             self.raw_im = czi.asarray()
-            
-        self.print_summary()
+        
+        if summary:
+            self.print_summary()
+        
         self.squeeze_data()
                 
     def print_summary(self):
@@ -121,6 +132,8 @@ class CziImport():
             '''.format(self.raw_im.shape[1],
                       self.raw_im.shape[2],
                       self.raw_im.shape[3]))
+        
+        print(self.raw_im.shape)
               
         print('''
             The 3D dimensions of the data are:
@@ -135,6 +148,10 @@ class CziImport():
         '''
         
         self.data = np.squeeze(self.raw_im)
+        
+        # Check the length of first axis and swap dimensions if greater than a few
+        if self.data.shape[0] > 4:
+            self.data = np.swapaxes(self.data,0,1)
         
 def tidy_vector_data(name):
     '''
