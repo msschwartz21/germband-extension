@@ -21,8 +21,11 @@ def read_hyperstack(fpath,dataset='channel1',tmax=166):
     # Retrieve each timepoint from file object
     L = []
     for t in range(tmax+1):
-        L.append(np.array(f.get('t'+str(t)).get(dataset)))
-        
+        try:
+            L.append(np.array(f.get('t'+str(t)).get(dataset)))
+        except:
+            print('No data at time',t)
+            
     # Close h5 file
     f.close()
         
