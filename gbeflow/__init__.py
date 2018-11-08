@@ -71,12 +71,42 @@ class MaskEmbryo():
     '''
 
     def __init__(self,points):
+        '''
+        Calculate a first try ellipse using default parameters
+
+        Parameters
+        ----------
+        points : pd.DataFrame
+            Contains the columns x and y with 2 rows
+
+        Returns
+        -------
+        self.ell, self.rell, self.fell
+        '''
 
         self.df = points
+        self.calc_start_ell()
+        self.calc_rotation()
+        self.shift_to_center()
     
     def calc_ellipse(self,center_x,center_y,radius_x,radius_y):
         '''
         Calculate a parametrized ellipse based on input values
+        
+        Parameters
+        ----------
+        center_x : float
+            Center point of the ellipse in x dimension
+        center_y : float
+            Center point of the ellipse in y dimension
+        radius_x : float
+            Radius of ellipse in x dimension
+        radius_y : float
+            Radius of ellipse in y dimension
+
+        Returns
+        -------
+        Ellipse in a 400x2 array
         '''
 
         # Values to calculate the ellipse over 
@@ -90,34 +120,60 @@ class MaskEmbryo():
 
         return(init)
 
-    def customize_ellipse(self,df,scale=1.5,yradius=300):
+    def calc_start_ell(self,scale=1.5,yradius=300,df=None):
         '''
         Customize the fit of an ellipse to an embryo based on the selected endpoints
 
         Parameters
         ----------
-        points : pd.DataFrame
-            Contains the columns x and y with 2 rows
         scale : float, optional
             Typically greater than 1 to extend the length between the two points beyond the ends of the embryo
-        yradius : int
+        yradius : int, optional
             Y radius for initial ellipse, default=300
-
+        df : pd.DataFrame, optional
+            Contains the columns x and y with 2 rows
+        
         Returns
         -------
-        ellipse : array
+        self.ell : array
             Array of shape 400x2 that contains position of custom ellipse
         '''
+
+        # Assign global variables if not specified
+        if df == None:
+            df = self.df
 
         # Calculate the length of the embryo based on two endpoints
         l = np.sqrt((df.iloc[1].x - df.iloc[0].x)**2 + 
                     (df.iloc[1].y - df.iloc[0].x)**2)
 
         # Divide l by 2 and scale by scale factor
-        radius = (l/2)*scale
+        self.radius = (l/2)*scale
 
         # Calculate ellipse at 0,0
-        ell = calc_ellipse(0,0,radius,yradius)
+        self.ell = self.calc_ellipse(0,0,self.radius,yradius)
+
+    def calc_rotation(self,ell=None,df=None):
+        '''
+        Calculate angle of rotation and rotation matrix using -angle
+
+        Parameters
+        ----------
+        ell : np.array, optional
+            Ellipse array
+        df : pd.DataFrame, optional
+            Contains the columns x and y with 2 rows
+        
+        Returns
+        -------
+        self.rell
+        '''
+
+        # Assign global variables if not specified
+        if ell == None:
+            ell = self.ell
+        if df == None:
+            df = self.df
 
         # Calculate rotation angle using arctan with two end points
         theta = -np.arctan2(df.iloc[0].y-df.iloc[1].y, 
@@ -126,7 +182,29 @@ class MaskEmbryo():
         # Calculate rotation matrix based on theta and apply to ell
         R = np.array([[np.cos(theta),-np.sin(theta)],
                  [np.sin(theta),np.cos(theta)]])
-        rell = np.dot(ell,R)
+        self.rell = np.dot(ell,R)
+
+    def shift_to_center(self,rell=None,df=None):
+        '''
+        Shift ellipse that started at (0,0) to the center of the embryo
+
+        Parameters
+        ----------
+        rell : np.array, optional
+            Ellipse array
+        df : pd.DataFrame, optional
+            Contains the columns x and y with 2 rows
+        
+        Returns
+        -------
+        self.fell
+        '''
+
+        # Assign global variables if not specified
+        if rell == None:
+            rell = self.rell
+        if df == None:
+            df = self.df
 
         # Calculate the center embryo point based on endpoints
         centerx = np.abs(df.iloc[0].x - df.iloc[1].x)/2
@@ -139,21 +217,37 @@ class MaskEmbryo():
         centery = centery + yshift
 
         # Shift rotated ellipse to the center
-        fell = np.zeros(ell.shape)
-        fell[:,0] = rell[:,0]+centerx
-        fell[:,1] = rell[:,1]+centery
+        self.fell = np.zeros(rell.shape)
+        self.fell[:,0] = rell[:,0]+centerx
+        self.fell[:,1] = rell[:,1]+centery
 
-        return(fell)
+        return(self.fell)
 
 
-    def contour_embryo(self,img,init):
+    def contour_embryo(self,img,init=None,sigma=3):
         '''
         Fit a contour to the embryo to separate the background
-        Returns a masked image where all background points = 0
+
+        Parameters
+        ----------
+        img : 2D np.array
+            2D image from a single timepoint to mask
+        init : 400x2 ellipse array, optional
+            Starting ellipse array that is bigger than the embryo
+        sigma : int, optional 
+            Kernel size for the Gaussian smoothing step
+
+        Returns
+        -------
+        Masked image where all background points = 0
         '''
 
+        # Assign global variables if not specified
+        if init == None:
+            init = self.fell
+
         # Fit contour based on starting ellipse
-        snake = active_contour(gaussian(img, 3),
+        snake = active_contour(gaussian(img, sigma),
                            init, alpha=0.015, beta=10, gamma=0.001)
 
         # Create boolean mask based on contour
