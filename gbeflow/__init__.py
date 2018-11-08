@@ -65,38 +65,104 @@ def imshow(img,figsize=(10,8)):
     cax = ax.imshow(img)
     plt.colorbar(cax)
     
-def calc_ellipse(center_x,center_y,radius_x,radius_y):
+class MaskEmbryo():
     '''
-    Calculate a parametrized ellipse based on input values
+    Fit an ellipse to an embryo and calculate mask
     '''
-    
-    # Values to calculate the ellipse over using parametrized trigonometric fxns
-    s = np.linspace(0, 2*np.pi, 400)
-    
-    # Calculate the position of the ellipse as a function of s
-    x = center_x + radius_x*np.cos(s)
-    y = center_y + radius_y*np.sin(s)
-    init = np.array([x, y]).T
-    
-    return(init)
 
-def contour_embryo(img,init):
-    '''
-    Fit a contour to the embryo to separate the background
-    Returns a masked image where all background points = 0
-    '''
+    def __init__(self,points):
+
+        self.df = points
     
-    # Fit contour based on starting ellipse
-    snake = active_contour(gaussian(img, 3),
-                       init, alpha=0.015, beta=10, gamma=0.001)
-    
-    # Create boolean mask based on contour
-    mask = grid_points_in_poly(img.shape, snake).T
-    
-    # Apply mask to image and set background to 0
-    img[~mask] = 0
-    
-    return(img)
+    def calc_ellipse(self,center_x,center_y,radius_x,radius_y):
+        '''
+        Calculate a parametrized ellipse based on input values
+        '''
+
+        # Values to calculate the ellipse over 
+        # using parametrized trigonometric fxns
+        s = np.linspace(0, 2*np.pi, 400)
+
+        # Calculate the position of the ellipse as a function of s
+        x = center_x + radius_x*np.cos(s)
+        y = center_y + radius_y*np.sin(s)
+        init = np.array([x, y]).T
+
+        return(init)
+
+    def customize_ellipse(self,df,scale=1.5,yradius=300):
+        '''
+        Customize the fit of an ellipse to an embryo based on the selected endpoints
+
+        Parameters
+        ----------
+        points : pd.DataFrame
+            Contains the columns x and y with 2 rows
+        scale : float, optional
+            Typically greater than 1 to extend the length between the two points beyond the ends of the embryo
+        yradius : int
+            Y radius for initial ellipse, default=300
+
+        Returns
+        -------
+        ellipse : array
+            Array of shape 400x2 that contains position of custom ellipse
+        '''
+
+        # Calculate the length of the embryo based on two endpoints
+        l = np.sqrt((df.iloc[1].x - df.iloc[0].x)**2 + 
+                    (df.iloc[1].y - df.iloc[0].x)**2)
+
+        # Divide l by 2 and scale by scale factor
+        radius = (l/2)*scale
+
+        # Calculate ellipse at 0,0
+        ell = calc_ellipse(0,0,radius,yradius)
+
+        # Calculate rotation angle using arctan with two end points
+        theta = -np.arctan2(df.iloc[0].y-df.iloc[1].y, 
+                           df.iloc[0].x-df.iloc[1].x)
+
+        # Calculate rotation matrix based on theta and apply to ell
+        R = np.array([[np.cos(theta),-np.sin(theta)],
+                 [np.sin(theta),np.cos(theta)]])
+        rell = np.dot(ell,R)
+
+        # Calculate the center embryo point based on endpoints
+        centerx = np.abs(df.iloc[0].x - df.iloc[1].x)/2
+        centery = np.abs(df.iloc[0].y - df.iloc[1].y)/2
+
+        # Calculate shift from origin to embryo center
+        yshift = df.y.min()
+        xshift = df.x.min()
+        centerx = centerx + xshift
+        centery = centery + yshift
+
+        # Shift rotated ellipse to the center
+        fell = np.zeros(ell.shape)
+        fell[:,0] = rell[:,0]+centerx
+        fell[:,1] = rell[:,1]+centery
+
+        return(fell)
+
+
+    def contour_embryo(self,img,init):
+        '''
+        Fit a contour to the embryo to separate the background
+        Returns a masked image where all background points = 0
+        '''
+
+        # Fit contour based on starting ellipse
+        snake = active_contour(gaussian(img, 3),
+                           init, alpha=0.015, beta=10, gamma=0.001)
+
+        # Create boolean mask based on contour
+        mask = grid_points_in_poly(img.shape, snake).T
+
+        # Apply mask to image and set background to 0
+        img[~mask] = 0
+
+        return(img)
 
 class CziImport():
     '''
