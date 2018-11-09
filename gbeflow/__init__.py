@@ -367,3 +367,35 @@ def tidy_vector_data(name):
     vectors = vx.merge(vy)
     
     return(vectors)
+
+def reshape_vector_data(df):
+    '''
+    Convert dataframe structure into a set of meshgrid arrays
+    
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe with columns x,y,frame,vx,vy
+        
+    Returns
+    -------
+    tt,xx,yy,vx,vy
+        Set of arrays of shape (len(T),len(X),len(Y))
+    '''
+    
+    # Extract unique values for txy
+    T = df['frame'].unique()
+    X = df['x'].unique()
+    Y = df['y'].unique()
+    
+    # Create meshgrid using 'ij' indexing to get shape txy
+    tt,xx,yy = np.meshgrid(T,X,Y,indexing='ij')
+    
+    # Create hierarchical index 
+    dfh = df.set_index(['frame','x','y'])
+    
+    # Reshape vx and vy values into numpy array
+    vx = dfh['vx'].values.reshape((T.shape[0],X.shape[0],Y.shape[0]))
+    vy = dfh['vy'].values.reshape((T.shape[0],X.shape[0],Y.shape[0]))
+    
+    return(tt,xx,yy,vx,vy)
