@@ -10,5 +10,10 @@ function OpticalFlowOutput(OutName,MovieName,BinaryMask,BoxSize,BlurSTD,ArrowSiz
     disp(size(Vx));
     csvwrite(strcat(OutName,'_Vy.csv'),Vy);
     disp(size(Vy));
-
+    
+    vidobj = VideoWriter(strcat(OutName,'.avi'));
+    vidobj.open();
+    vidobj.writeVideo(mov);
+    vidobj.close();
+    
 end

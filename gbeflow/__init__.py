@@ -1,13 +1,17 @@
 import h5py
 import numpy as np
-from czifile import CziFile
 import pandas as pd
 
 import matplotlib.pyplot as plt
 
+from czifile import CziFile
 from skimage.filters import gaussian
 from skimage.segmentation import active_contour
 from skimage.measure import grid_points_in_poly
+
+import tqdm
+
+from scipy.interpolate import RectBivariateSpline
 
 def read_hyperstack(fpath,dataset='channel1',tmax=166): 
     '''
@@ -145,7 +149,7 @@ class MaskEmbryo():
 
         # Calculate the length of the embryo based on two endpoints
         l = np.sqrt((df.iloc[1].x - df.iloc[0].x)**2 + 
-                    (df.iloc[1].y - df.iloc[0].x)**2)
+                    (df.iloc[1].y - df.iloc[0].y)**2)
 
         # Divide l by 2 and scale by scale factor
         self.radius = (l/2)*scale
@@ -253,9 +257,23 @@ class MaskEmbryo():
         # Create boolean mask based on contour
         mask = grid_points_in_poly(img.shape, snake).T
 
+        return(mask)
+    
+    def mask_image(self,img,mask):
+        '''
+        Apply mask to image and return with background = 0
+        
+        Parameters
+        ----------
+        img : 2D np.array
+            2D image from a single timepoint to mask
+        mask : 2D np.array
+            2D boolean array containing mask
+        '''
+        
         # Apply mask to image and set background to 0
         img[~mask] = 0
-
+        
         return(img)
 
 class CziImport():
@@ -399,3 +417,21 @@ def reshape_vector_data(df):
     vy = dfh['vy'].values.reshape((T.shape[0],X.shape[0],Y.shape[0]))
     
     return(tt,xx,yy,vx,vy)
+
+def calc_flow_path(xval,yval,vx,vy,x0,y0):
+    
+    # Initialize position list with start value
+    xpos = [x0]
+    ypos = [y0]
+    
+    for t in tqdm.tqdm(range(1,vx.shape[0])):
+        
+        # Interpolate to find change in x and y
+        dx = RectBivariateSpline(xval,yval,vx[t]).ev(xpos[t-1],ypos[t-1])
+        dy = RectBivariateSpline(xval,yval,vy[t]).ev(xpos[t-1],ypos[t-1])
+
+        # Update position arrays
+        xpos.append(xpos[t-1]+dx)
+        ypos.append(ypos[t-1]+dy)
+        
+    return(np.array([xpos,ypos]))
