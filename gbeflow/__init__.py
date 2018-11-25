@@ -489,6 +489,9 @@ class VectorField:
         # Initialize start point dataframe
         self.starts = pd.DataFrame()
         
+        # Initialize interpolation dictionary
+        self.interp = {}
+        
     def add_image_data(self,impath):
         
         # Determine file type for import
@@ -505,7 +508,6 @@ class VectorField:
         p = bebi103.viz.record_clicks(self.img[0],
                                       notebook_url=notebook_url,
                                       flip=False)
-        
         return(p)
     
     def save_start_points(self,p):
@@ -514,15 +516,15 @@ class VectorField:
         self.starts = self.starts.append(p.to_df())
         
     def initialize_interpolation(self,dt,timer=True):
-        
-        self.dt = dt
-        
+                
         # Store interpolation object over time
-        self.Ldx = []
-        self.Ldy = []
+        self.interp[dt] = {
+            'Ldx':[],
+            'Ldy':[]
+        }
         
         # Record interpolation initializationa as false
-        self.interp_init = False
+#         self.interp_init = False
         
         # Set iterator with or without tqdm
         # Includes zeroth timepoint where all vx and vy = 0
@@ -535,25 +537,23 @@ class VectorField:
 
             # Interpolate to find change in x and y
             dx = RectBivariateSpline(self.xval,self.yval,
-                                     self.dt*self.vx[t])
+                                     dt*self.vx[t])
             dy = RectBivariateSpline(self.xval,self.yval,
-                                     self.dt*self.vy[t])
+                                     dt*self.vy[t])
             
             # Save iterator to list
-            self.Ldx.append(dx)
-            self.Ldy.append(dy)
+            self.interp[dt]['Ldx'].append(dx)
+            self.interp[dt]['Ldy'].append(dy)
             
         # Set interpolation initialization value to True
-        self.interp_init = True
+#         self.interp_init = True
         
     def calc_track(self,x0,y0,dt):
         
         # Check if interpolation has been initialized
-        if hasattr(self,'interp_init') and (self.interp_init==True):
-            # Continue with function without problem
-            pass
-        else:
+        if dt not in self.interp.keys():
             self.initialize_interpolation(dt)
+            print('Intialize',dt)
             
         # Initialize position list with start value
         xpos = [x0]
@@ -562,8 +562,8 @@ class VectorField:
         for t in range(np.max(self.tval)):
             
             # Calculate dx and dy from iterators
-            dx = self.Ldx[t].ev(xpos[t],ypos[t])
-            dy = self.Ldy[t].ev(xpos[t],ypos[t])
+            dx = self.interp[dt]['Ldx'][t].ev(xpos[t],ypos[t])
+            dy = self.interp[dt]['Ldy'][t].ev(xpos[t],ypos[t])
             
             # Update position arrays
             xpos.append(xpos[t]+dx)
@@ -584,7 +584,7 @@ class VectorField:
             iterator = starts.index
             
         for i in iterator:
-            x0,y0 = vf.starts.iloc[i]
+            x0,y0 = self.starts.iloc[i]
             track = self.calc_track(x0,y0,dt)
             trackdf = pd.DataFrame({'x':track[0,:],'y':track[1,:],'t':self.tval,
                                             'track':[i]*track.shape[-1],'name':[name]*track.shape[-1]})
