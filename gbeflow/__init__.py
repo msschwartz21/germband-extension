@@ -505,9 +505,7 @@ class VectorField:
         # Add to starts dataframe
         self.starts = self.starts.append(p.to_df())
         
-    def initialize_interpolation(self,dt,timer=True):
-        
-        self.dt = dt
+    def initialize_interpolation(self,timer=True):
         
         # Store interpolation object over time
         self.Ldx = []
@@ -527,9 +525,9 @@ class VectorField:
 
             # Interpolate to find change in x and y
             dx = RectBivariateSpline(self.xval,self.yval,
-                                     self.dt*self.vx[t])
+                                     self.vx[t])
             dy = RectBivariateSpline(self.xval,self.yval,
-                                     self.dt*self.vy[t])
+                                     self.vy[t])
             
             # Save iterator to list
             self.Ldx.append(dx)
@@ -545,7 +543,7 @@ class VectorField:
             # Continue with function without problem
             pass
         else:
-            self.initialize_interpolation(dt)
+            self.initialize_interpolation()
             
         # Initialize position list with start value
         xpos = [x0]
@@ -558,8 +556,9 @@ class VectorField:
             dy = self.Ldy[t].ev(xpos[t],ypos[t])
             
             # Update position arrays
-            xpos.append(xpos[t]+dx)
-            ypos.append(ypos[t]+dy)
+            # Multiply velocity vector by time to get distance
+            xpos.append(xpos[t] + dx*dt)
+            ypos.append(ypos[t] + dy*dt)
             
         return(np.array([xpos,ypos]))
     
@@ -576,7 +575,7 @@ class VectorField:
             iterator = starts.index
             
         for i in iterator:
-            x0,y0 = vf.starts.iloc[i]
+            x0,y0 = self.starts.iloc[i]
             track = self.calc_track(x0,y0,dt)
             trackdf = pd.DataFrame({'x':track[0,:],'y':track[1,:],'t':self.tval,
                                             'track':[i]*track.shape[-1],'name':[name]*track.shape[-1]})
