@@ -418,17 +418,47 @@ def reshape_vector_data(df):
     
     return(tt,xx,yy,vx,vy)
 
-def calc_flow_path(xval,yval,vx,vy,x0,y0):
+def calc_flow_path(xval,yval,vx,vy,x0,y0,dt,time=True):
+    '''
+    Calculate the trajectory of a point through the vector field over time
+    
+    Parameters
+    ----------
+    xval : np.array
+        A list of unique x values that define the meshgrid of xx
+    yval : np.array
+        A corresponding list of unique y values that define the meshgrid of yy
+    vx : np.array
+        Array of shape (time,len(xval),len(yval)) containing the x velocity component
+    vy : np.array
+        Array of shape (time,len(xval),len(yval)) containing y velocity component
+    dt : float
+        Duration of the time step between intervals
+    time : boolean, optional
+        Default true uses the tqdm timer as an iterator
+        
+    Returns
+    -------
+    Array of shape (time,2) containing x and y position of trajectory over time
+    
+    '''
     
     # Initialize position list with start value
     xpos = [x0]
     ypos = [y0]
     
-    for t in tqdm.tqdm(range(1,vx.shape[0])):
+    if time == True:
+        iterator = tqdm.tqdm(range(1,vx.shape[0]))
+    else:
+        iterator = range(1,vx.shape[0])
+    
+    for t in iterator:
         
         # Interpolate to find change in x and y
-        dx = RectBivariateSpline(xval,yval,vx[t]).ev(xpos[t-1],ypos[t-1])
-        dy = RectBivariateSpline(xval,yval,vy[t]).ev(xpos[t-1],ypos[t-1])
+        dx = RectBivariateSpline(xval,yval,dt*vx[t]
+                                ).ev(xpos[t-1],ypos[t-1])
+        dy = RectBivariateSpline(xval,yval,dt*vy[t]
+                                ).ev(xpos[t-1],ypos[t-1])
 
         # Update position arrays
         xpos.append(xpos[t-1]+dx)
