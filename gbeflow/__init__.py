@@ -3,8 +3,11 @@ import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
+import bebi103
 
 from czifile import CziFile
+import tifffile
+
 from skimage.filters import gaussian
 from skimage.segmentation import active_contour
 from skimage.measure import grid_points_in_poly
@@ -418,7 +421,7 @@ def reshape_vector_data(df):
     
     return(tt,xx,yy,vx,vy)
 
-def calc_flow_path(xval,yval,vx,vy,x0,y0,dt,time=True):
+def calc_flow_path(xval,yval,vx,vy,x0,y0,dt,timer=True):
     '''
     Calculate the trajectory of a point through the vector field over time
     
@@ -434,7 +437,7 @@ def calc_flow_path(xval,yval,vx,vy,x0,y0,dt,time=True):
         Array of shape (time,len(xval),len(yval)) containing y velocity component
     dt : float
         Duration of the time step between intervals
-    time : boolean, optional
+    timer : boolean, optional
         Default true uses the tqdm timer as an iterator
         
     Returns
@@ -447,7 +450,7 @@ def calc_flow_path(xval,yval,vx,vy,x0,y0,dt,time=True):
     xpos = [x0]
     ypos = [y0]
     
-    if time == True:
+    if timer == True:
         iterator = tqdm.tqdm(range(1,vx.shape[0]))
     else:
         iterator = range(1,vx.shape[0])
@@ -465,3 +468,124 @@ def calc_flow_path(xval,yval,vx,vy,x0,y0,dt,time=True):
         ypos.append(ypos[t-1]+dy)
         
     return(np.array([xpos,ypos]))
+
+class VectorField:
+    
+    def __init__(self,name):
+        
+        self.name = name
+        
+        # Import vector data as dataframe
+        self.df = tidy_vector_data(self.name)
+        
+        # Transform vector dataframe into arrays
+        self.tt,self.xx,self.yy,self.vx,self.vy = reshape_vector_data(self.df)
+        
+        # Extract unique x and y positions
+        self.xval = np.unique(self.xx)
+        self.yval = np.unique(self.yy)
+        self.tval = np.unique(self.tt)
+        
+        # Initialize start point dataframe
+        self.starts = pd.DataFrame()
+        
+    def add_image_data(self,impath):
+        
+        # Determine file type for import
+        if impath[-3:] == 'czi':
+            self.img = CziImport(impath,summary=False).data
+        elif 'tif' in impath[-4:]:
+            self.img = tifffile.imread(impath)
+        else:
+            print('Image files must be czi or tif')
+            
+    def pick_start_points(self,notebook_url='localhost:8888'):
+        
+        # Record start clicks
+        p = bebi103.viz.record_clicks(self.img[0],
+                                      notebook_url=notebook_url,
+                                      flip=False)
+        
+        return(p)
+    
+    def save_start_points(self,p):
+        
+        # Add to starts dataframe
+        self.starts = self.starts.append(p.to_df())
+        
+    def initialize_interpolation(self,dt,timer=True):
+        
+        self.dt = dt
+        
+        # Store interpolation object over time
+        self.Ldx = []
+        self.Ldy = []
+        
+        # Record interpolation initializationa as false
+        self.interp_init = False
+        
+        # Set iterator with or without tqdm
+        # Includes zeroth timepoint where all vx and vy = 0
+        if timer == True:
+            iterator = tqdm.tqdm(self.tval)
+        else:
+            iterator = self.tval
+
+        for t in iterator:
+
+            # Interpolate to find change in x and y
+            dx = RectBivariateSpline(self.xval,self.yval,
+                                     self.dt*self.vx[t])
+            dy = RectBivariateSpline(self.xval,self.yval,
+                                     self.dt*self.vy[t])
+            
+            # Save iterator to list
+            self.Ldx.append(dx)
+            self.Ldy.append(dy)
+            
+        # Set interpolation initialization value to True
+        self.interp_init = True
+        
+    def calc_track(self,x0,y0,dt):
+        
+        # Check if interpolation has been initialized
+        if hasattr(self,'interp_init') and (self.interp_init==True):
+            # Continue with function without problem
+            pass
+        else:
+            self.initialize_interpolation(dt)
+            
+        # Initialize position list with start value
+        xpos = [x0]
+        ypos = [y0]
+        
+        for t in range(np.max(self.tval)):
+            
+            # Calculate dx and dy from iterators
+            dx = self.Ldx[t].ev(xpos[t],ypos[t])
+            dy = self.Ldy[t].ev(xpos[t],ypos[t])
+            
+            # Update position arrays
+            xpos.append(xpos[t]+dx)
+            ypos.append(ypos[t]+dy)
+            
+        return(np.array([xpos,ypos]))
+    
+    def calc_track_set(self,starts,dt,name='',timer=True):
+        
+        # Check if track dataframe needs to be created
+        if hasattr(self,'tracks') == False:
+            self.tracks = pd.DataFrame()
+        
+        # Set up iterator
+        if timer:
+            iterator = tqdm.tqdm(starts.index)
+        else:
+            iterator = starts.index
+            
+        for i in iterator:
+            x0,y0 = vf.starts.iloc[i]
+            track = self.calc_track(x0,y0,dt)
+            trackdf = pd.DataFrame({'x':track[0,:],'y':track[1,:],'t':self.tval,
+                                            'track':[i]*track.shape[-1],'name':[name]*track.shape[-1]})
+            self.tracks = pd.concat([self.tracks,trackdf])
