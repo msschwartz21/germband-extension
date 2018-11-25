@@ -80,12 +80,10 @@ class MaskEmbryo():
     def __init__(self,points):
         '''
         Calculate a first try ellipse using default parameters
-
         Parameters
         ----------
         points : pd.DataFrame
             Contains the columns x and y with 2 rows
-
         Returns
         -------
         self.ell, self.rell, self.fell
@@ -110,7 +108,6 @@ class MaskEmbryo():
             Radius of ellipse in x dimension
         radius_y : float
             Radius of ellipse in y dimension
-
         Returns
         -------
         Ellipse in a 400x2 array
@@ -130,7 +127,6 @@ class MaskEmbryo():
     def calc_start_ell(self,scale=1.5,yradius=300,df=None):
         '''
         Customize the fit of an ellipse to an embryo based on the selected endpoints
-
         Parameters
         ----------
         scale : float, optional
@@ -163,7 +159,6 @@ class MaskEmbryo():
     def calc_rotation(self,ell=None,df=None):
         '''
         Calculate angle of rotation and rotation matrix using -angle
-
         Parameters
         ----------
         ell : np.array, optional
@@ -194,7 +189,6 @@ class MaskEmbryo():
     def shift_to_center(self,rell=None,df=None):
         '''
         Shift ellipse that started at (0,0) to the center of the embryo
-
         Parameters
         ----------
         rell : np.array, optional
@@ -234,7 +228,6 @@ class MaskEmbryo():
     def contour_embryo(self,img,init=None,sigma=3):
         '''
         Fit a contour to the embryo to separate the background
-
         Parameters
         ----------
         img : 2D np.array
@@ -243,7 +236,6 @@ class MaskEmbryo():
             Starting ellipse array that is bigger than the embryo
         sigma : int, optional 
             Kernel size for the Gaussian smoothing step
-
         Returns
         -------
         Masked image where all background points = 0
@@ -489,9 +481,6 @@ class VectorField:
         # Initialize start point dataframe
         self.starts = pd.DataFrame()
         
-        # Initialize interpolation dictionary
-        self.interp = {}
-        
     def add_image_data(self,impath):
         
         # Determine file type for import
@@ -508,6 +497,7 @@ class VectorField:
         p = bebi103.viz.record_clicks(self.img[0],
                                       notebook_url=notebook_url,
                                       flip=False)
+        
         return(p)
     
     def save_start_points(self,p):
@@ -516,15 +506,15 @@ class VectorField:
         self.starts = self.starts.append(p.to_df())
         
     def initialize_interpolation(self,dt,timer=True):
-                
+        
+        self.dt = dt
+        
         # Store interpolation object over time
-        self.interp[dt] = {
-            'Ldx':[],
-            'Ldy':[]
-        }
+        self.Ldx = []
+        self.Ldy = []
         
         # Record interpolation initializationa as false
-#         self.interp_init = False
+        self.interp_init = False
         
         # Set iterator with or without tqdm
         # Includes zeroth timepoint where all vx and vy = 0
@@ -537,23 +527,25 @@ class VectorField:
 
             # Interpolate to find change in x and y
             dx = RectBivariateSpline(self.xval,self.yval,
-                                     dt*self.vx[t])
+                                     self.dt*self.vx[t])
             dy = RectBivariateSpline(self.xval,self.yval,
-                                     dt*self.vy[t])
+                                     self.dt*self.vy[t])
             
             # Save iterator to list
-            self.interp[dt]['Ldx'].append(dx)
-            self.interp[dt]['Ldy'].append(dy)
+            self.Ldx.append(dx)
+            self.Ldy.append(dy)
             
         # Set interpolation initialization value to True
-#         self.interp_init = True
+        self.interp_init = True
         
     def calc_track(self,x0,y0,dt):
         
         # Check if interpolation has been initialized
-        if dt not in self.interp.keys():
+        if hasattr(self,'interp_init') and (self.interp_init==True):
+            # Continue with function without problem
+            pass
+        else:
             self.initialize_interpolation(dt)
-            print('Intialize',dt)
             
         # Initialize position list with start value
         xpos = [x0]
@@ -562,8 +554,8 @@ class VectorField:
         for t in range(np.max(self.tval)):
             
             # Calculate dx and dy from iterators
-            dx = self.interp[dt]['Ldx'][t].ev(xpos[t],ypos[t])
-            dy = self.interp[dt]['Ldy'][t].ev(xpos[t],ypos[t])
+            dx = self.Ldx[t].ev(xpos[t],ypos[t])
+            dy = self.Ldy[t].ev(xpos[t],ypos[t])
             
             # Update position arrays
             xpos.append(xpos[t]+dx)
@@ -584,7 +576,7 @@ class VectorField:
             iterator = starts.index
             
         for i in iterator:
-            x0,y0 = self.starts.iloc[i]
+            x0,y0 = vf.starts.iloc[i]
             track = self.calc_track(x0,y0,dt)
             trackdf = pd.DataFrame({'x':track[0,:],'y':track[1,:],'t':self.tval,
                                             'track':[i]*track.shape[-1],'name':[name]*track.shape[-1]})
