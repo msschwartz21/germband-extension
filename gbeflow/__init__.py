@@ -475,7 +475,8 @@ class VectorField:
         Parameters
         ----------
         name : str
-            Root of the filename used in OpticalFlow.mat passed to `tidy_vector_data`
+            String specifying the name passed to OpticalFlowOutput 
+            Can include complete or partial path to file
             
         Attributes
         ----------
