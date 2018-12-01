@@ -721,28 +721,24 @@ class VectorField:
             self.tracks = pd.concat([self.tracks,trackdf])
             
 
-def make_track_movie(movie,df,c,name):
+def load_avi_as_array(path):
     '''
+    Use `av` module to load each frame from an avi movie
+    into a numpy array
     
     Parameters
     ----------
-    movie : str
-        Complete or relative path to the movie file to plot on
-    df : pd.DataFrame
-        Dataframe of tracks minimally with columns x,y,t
-    c : str,color
-        Currently only supports single color assignments, 
-        but data specific assignments could be possible
-    name : str
-        Root of filename for output file, without filetype 
+    path : str
+        Complete or relative path to avi movie file for import
+        
+    Returns
+    -------
+    np.array 
+        Array with dimensions frames,x,y
     '''
     
-    # Import specialized plotting functions for non-gui backend
-    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-    from matplotlib.figure import Figure
-    
     # Import movie data
-    v = av.open(movie)
+    v = av.open(path)
     
     # Initialize list to save each frame
     Larr = []
@@ -755,7 +751,43 @@ def make_track_movie(movie,df,c,name):
     # Convert list of arrays to single array
     vimg = np.array(Larr)
     
-    print('Movie import complete')
+    return(vimg)
+            
+def make_track_movie(movie,df,c,name):
+    '''
+    Plots the trajectory of points over time on each frame of 
+    an existing movie or array
+    
+    Parameters
+    ----------
+    movie : str
+        Complete or relative path to the movie file to plot on
+    df : pd.DataFrame
+        Dataframe of tracks minimally with columns x,y,t
+    c : str,color
+        Currently only supports single color assignments, 
+        but data specific assignments could be possible
+    name : str
+        Root of filename for output file, without filetype 
+        
+    Returns
+    -------
+    Saves a tif stack using path provided by `name`
+    '''
+    
+    # Import specialized plotting functions for non-gui backend
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    from matplotlib.figure import Figure
+    
+    # If input is a string, import movie from specified path
+    if type(movie) == str:
+        vimg = load_avi_as_array(movie)
+    # If input not a string and not an array, print error message
+    elif type(movie) == np.ndarray:
+        vimg = movie
+    else:
+        print('movie input must be a path to avi or a numpy array')
+        return()
     
     # Initialize list to save arrays of each frame
     Larr = []
