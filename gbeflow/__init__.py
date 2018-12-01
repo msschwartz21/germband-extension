@@ -7,6 +7,7 @@ import bebi103
 
 from czifile import CziFile
 import tifffile
+import av
 
 from skimage.filters import gaussian
 from skimage.segmentation import active_contour
@@ -718,3 +719,75 @@ class VectorField:
             trackdf = pd.DataFrame({'x':track[0,:],'y':track[1,:],'t':self.tval,
                                             'track':[i]*track.shape[-1],'name':[name]*track.shape[-1]})
             self.tracks = pd.concat([self.tracks,trackdf])
+            
+
+def make_track_movie(movie,df,c,name):
+    '''
+    
+    Parameters
+    ----------
+    movie : str
+        Complete or relative path to the movie file to plot on
+    df : pd.DataFrame
+        Dataframe of tracks minimally with columns x,y,t
+    c : str,color
+        Currently only supports single color assignments, 
+        but data specific assignments could be possible
+    name : str
+        Root of filename for output file, without filetype 
+    '''
+    
+    # Import specialized plotting functions for non-gui backend
+    from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+    from matplotlib.figure import Figure
+    
+    # Import movie data
+    v = av.open(movie)
+    
+    # Initialize list to save each frame
+    Larr = []
+    
+    # Save each frame as an array
+    for packet in v.demux():
+        for frame in packet.decode():
+            Larr.append(np.asarray(frame.to_image()))
+            
+    # Convert list of arrays to single array
+    vimg = np.array(Larr)
+    
+    print('Movie import complete')
+    
+    # Initialize list to save arrays of each frame
+    Larr = []
+    
+    # Generate plot of each frame and save to list
+    for t in tqdm.tqdm(range(vimg.shape[0])):
+        # Setup figure object and subplot axes
+        fig = Figure()
+        canvas = FigureCanvas(fig)
+        ax = fig.gca()
+        
+        # Plot image and tracks
+        ax.imshow(vimg[t])
+        ax.scatter(df[df.t==t].x,df[df.t==t].y,c=c)
+        
+        # Format figure for output
+        fig.tight_layout(pad=0)
+        ax.axis('off')
+        
+        # Draw plot which is required for saving
+        canvas.draw()
+        
+        # Esport plotting figure as a string of rgb values
+        rgbstring = canvas.tostring_rgb()
+        
+        # Load rgb string into a numpy array
+        image = np.frombuffer(rgbstring,dtype='uint8')
+        
+        # Reshape image array to fit dimensions of the original plot
+        Larr.append(
+            image.reshape(fig.canvas.get_width_height()[::-1]+(3,))
+        )
+        
+    # Compile array list to array and save
+    tifffile.imsave(name+'.tif',data=np.array(Larr))
