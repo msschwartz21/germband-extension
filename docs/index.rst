@@ -12,6 +12,8 @@ Welcome to gbeflow's documentation!
    
    source/gbeflow
    source/opticalflow
+   source/datamanagement
+   source/masking
    
 .. include:: ../README.rst
    
