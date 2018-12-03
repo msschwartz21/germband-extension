@@ -1,3 +1,4 @@
+
 import h5py
 import numpy as np
 import pandas as pd
@@ -638,7 +639,7 @@ class VectorField:
         # Set interpolation initialization value to True
         self.interp_init = True
         
-    def calc_track(self,x0,y0,dt):
+    def calc_track(self,x0,y0,dt,tmin=0):
         '''
         Calculate the trajectory of a single point through space and time
         
@@ -650,6 +651,8 @@ class VectorField:
             Y position of the starting point
         dt : float
             Duration of time step
+        trange : list or np.array
+            Range of t values to iterate over for interpolation
             
         Returns
         -------
@@ -664,11 +667,13 @@ class VectorField:
         else:
             self.initialize_interpolation()
             
+        trange = range(tmin,np.max(self.tval))
+            
         # Initialize position list with start value
-        xpos = [x0]
-        ypos = [y0]
+        xpos = [x0]*(tmin+1)
+        ypos = [y0]*(tmin+1)
         
-        for t in range(np.max(self.tval)):
+        for t in trange:
             
             # Calculate dx and dy from iterators
             dx = self.Ldx[t].ev(xpos[t],ypos[t])
@@ -681,7 +686,7 @@ class VectorField:
             
         return(np.array([xpos,ypos]))
     
-    def calc_track_set(self,starts,dt,name='',timer=True):
+    def calc_track_set(self,starts,dt,name='',timer=True,tmin=0):
         '''
         Calculate trajectories for a set of points using a constant dt
         
@@ -714,10 +719,12 @@ class VectorField:
             iterator = starts.index
             
         for i in iterator:
-            x0,y0 = self.starts.iloc[i]
-            track = self.calc_track(x0,y0,dt)
+            x0,y0 = starts.iloc[i]
+            track = self.calc_track(x0,y0,dt,tmin)
             trackdf = pd.DataFrame({'x':track[0,:],'y':track[1,:],'t':self.tval,
-                                            'track':[i]*track.shape[-1],'name':[name]*track.shape[-1]})
+                                    'track':[i]*track.shape[-1],
+                                    'name':[name]*track.shape[-1]})
+            
             self.tracks = pd.concat([self.tracks,trackdf])
             
 
