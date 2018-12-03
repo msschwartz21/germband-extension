@@ -20,7 +20,6 @@ dask==0.20.0
 decorator==4.3.0
 docutils==0.14
 entrypoints==0.2.3
--e git+git@github.com:msschwartz21/germband-extension.git@07bb146ee5dd2d627db0dcfb1e1d0f718b8b9823#egg=gbeflow
 h5py==2.8.0
 idna==2.7
 imageio==2.4.1
