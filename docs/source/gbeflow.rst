@@ -1,8 +1,8 @@
-gbeflow package
+API
 ===============
 
-Module contents
----------------
+gbeflow
+-------
 
 .. automodule:: gbeflow
     :members:

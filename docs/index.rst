@@ -10,8 +10,8 @@ Welcome to gbeflow's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   source/readme
    source/gbeflow
+   source/opticalflow
    
 .. include:: ../README.rst
    
@@ -21,6 +21,5 @@ Welcome to gbeflow's documentation!
 Indices and tables
 ==================
 
-* :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
