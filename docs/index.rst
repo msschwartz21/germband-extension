@@ -10,9 +10,10 @@ Welcome to gbeflow's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   readme
-   gbeflow
-   modules
+   source/readme
+   source/gbeflow
+   
+.. include:: ../README.rst
    
 
 
