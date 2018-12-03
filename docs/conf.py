@@ -68,7 +68,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store','.ipynb_checkpoints/*']
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
@@ -180,8 +180,9 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 
-autodoc_mock_imports = ['h5py','numpy','pandas','matplotlib.pyplot','bebi103',
-                       'czifile','tifffile','av',
-                       'skimage.filters','skimage.segmentation',
-                        'skimage.measure','tqdm','scipy.interpolate'
-                       ]
+# autodoc_mock_imports = ['h5py','numpy','pandas','matplotlib.pyplot','bebi103',
+#                        'czifile','tifffile','av',
+#                        'skimage.filters','skimage.segmentation',
+#                         'skimage.measure','tqdm','scipy','scipy.interpolate',
+#                         'matplotlib'
+#                        ]
