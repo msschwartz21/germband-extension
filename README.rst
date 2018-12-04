@@ -26,4 +26,5 @@ After cloning the repository, gbeflow can be installed in developer mode by runn
 
 License
 --------
+gbeflow is licensed under the MIT License.
 
