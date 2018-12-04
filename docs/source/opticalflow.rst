@@ -1,5 +1,8 @@
+.. _opticalflow: 
+
 Optical Flow
 ==============
+
 
 The Algorithm
 --------------
