@@ -11,6 +11,7 @@ API
 Documentation is available on `Read the Docs`__.
 
 .. _rtd: https://germband-extension.readthedocs.io/en/latest/
+
 __ rtd_
 
 Prerequisites
@@ -18,7 +19,7 @@ Prerequisites
 
 Anaconda
 ^^^^^^^^^
-`Anaconda <https://www.anaconda.com/>`_ is a distribution and package manager targeted for scientific computing. While Anaconda mostly focuses on python, it is capable with interfacing with other languages/packages as well. Several of the packages required for gbeflow have underlying C dependences that make independent installation difficult. Anaconda includes all of these packages and makes it simple to install any additional packages. gbeflow is written in Python 3, so we recommend installing the most up-to-date Anaconda installation for Python 3.
+`Anaconda <https://www.anaconda.com>`_ is a distribution and package manager targeted for scientific computing. While Anaconda mostly focuses on python, it is capable with interfacing with other languages/packages as well. Several of the packages required for gbeflow have underlying C dependences that make independent installation difficult. Anaconda includes all of these packages and makes it simple to install any additional packages. gbeflow is written in Python 3, so we recommend installing the most up-to-date Anaconda installation for Python 3.
 
 Matlab
 ^^^^^^^

@@ -74,6 +74,56 @@ def imshow(img,figsize=(10,8)):
     cax = ax.imshow(img)
     plt.colorbar(cax)
     
+def calc_line(points):
+    '''
+    Given two points calculate the line between the two points
+    
+    Parameters
+    -----------
+    points : pd.DataFrame
+        Dataframe containing the columns x, y, and 'level_1' (from df.reset_index())
+        Each row should contain data for a single point
+        
+    Returns
+    --------
+    lines : pd.DataFrame
+        Dataframe with columns that specify an equation for a line
+    '''
+    
+    line = pd.DataFrame()
+    
+    # Specify columns for x1,y1,x2,y2
+    line['x1'] = points[points['level_1']==0]['x']
+    line['x2'] = points[points['level_1']==1]['x']
+    line['y1'] = points[points['level_1']==0]['y']
+    line['y2'] = points[points['level_1']==1]['y']
+    
+    # Calculate the slope
+    line['dx'] = line['x2'] - line['x1']
+    line['dy'] = line['y2'] - line['y1']
+    line['m'] = line['dy']/line['dx']
+    
+    return(line)
+
+def calc_embryo_theta(line):
+    '''
+    Given a line fit to each embryo, calculate the angle of rotation
+    to align the embryo in the horizontal axis
+    
+    Parameters
+    -----------
+    line : pd.DataFrame
+        Dataframe returned by :func:`calc_line` containing columns dy and dx
+        
+    Returns
+    -------
+    line : pd.DataFrame
+        Input dataframe with an additional column theta in degrees
+    '''
+    
+    line['theta'] = np.rad2deg(np.arctan2(line['dy'], line['dx']))
+    return(line)
+    
 class MaskEmbryo():
     '''
     Fit an ellipse to an embryo and calculate mask
