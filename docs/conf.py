@@ -24,12 +24,13 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
         return MagicMock()
 
-MOCK_MODULES = ['av','h5py','czifile','bebi103','tifffile',
-               'tqdm','numpy','pandas','skimage',
-                'scikit-image','scipy','scipy.interpolate',
-               'skimage.filters','skimage.measure',
-               'skimage.segmentation','matplotlib.pyplot',
-               'matplotlib']
+MOCK_MODULES = ['av']
+#                 ,'h5py','czifile','bebi103','tifffile',
+#                'tqdm','numpy','pandas','skimage',
+#                 'scikit-image','scipy','scipy.interpolate',
+#                'skimage.filters','skimage.measure',
+#                'skimage.segmentation','matplotlib.pyplot',
+#                'matplotlib']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- Project information -----------------------------------------------------

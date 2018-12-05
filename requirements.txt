@@ -3,5 +3,8 @@ scikit-image
 bebi103
 czifile
 tifffile
-av
 tqdm
+numpy 
+pandas
+scipy
+matplotlib
