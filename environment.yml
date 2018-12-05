@@ -3,6 +3,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - av
   - glob
   - h5py
   - jupyter
@@ -24,6 +25,5 @@ dependencies:
     - czifile
     - matlabengineforpython
     - sphinx-rtd-theme
-    - nbsphinx
     - tifffile
 

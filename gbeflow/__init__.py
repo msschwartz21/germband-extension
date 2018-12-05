@@ -132,6 +132,7 @@ class MaskEmbryo():
     def __init__(self,points):
         '''
         Calculate a first try ellipse using default parameters
+        
         Parameters
         ----------
         points : pd.DataFrame
@@ -160,6 +161,7 @@ class MaskEmbryo():
             Radius of ellipse in x dimension
         radius_y : float
             Radius of ellipse in y dimension
+        
         Returns
         -------
         Ellipse in a 400x2 array
@@ -179,6 +181,7 @@ class MaskEmbryo():
     def calc_start_ell(self,scale=1.5,yradius=300,df=None):
         '''
         Customize the fit of an ellipse to an embryo based on the selected endpoints
+        
         Parameters
         ----------
         scale : float, optional
@@ -241,6 +244,7 @@ class MaskEmbryo():
     def shift_to_center(self,rell=None,df=None):
         '''
         Shift ellipse that started at (0,0) to the center of the embryo
+        
         Parameters
         ----------
         rell : np.array, optional
@@ -280,6 +284,7 @@ class MaskEmbryo():
     def contour_embryo(self,img,init=None,sigma=3):
         '''
         Fit a contour to the embryo to separate the background
+        
         Parameters
         ----------
         img : 2D np.array
@@ -288,6 +293,7 @@ class MaskEmbryo():
             Starting ellipse array that is bigger than the embryo
         sigma : int, optional 
             Kernel size for the Gaussian smoothing step
+        
         Returns
         -------
         Masked image where all background points = 0

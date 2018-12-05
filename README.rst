@@ -6,14 +6,6 @@ Efforts to track the rate of extension of the Drosophila germ band
 Usage
 -------
 
-API
------
-Documentation is available on `Read the Docs`__.
-
-.. _rtd: https://germband-extension.readthedocs.io/en/latest/
-
-__ rtd_
-
 Prerequisites
 --------------
 
@@ -23,21 +15,13 @@ Anaconda
 
 Matlab
 ^^^^^^^
-The optical flow algorithm which gbeflow relies on is written in Matlab `(Vig et al. 2016)`__. For more information on optical flow and the algorithm, checkout :ref:`opticalflow`. For the purposes of installation and setup, all you need to know is that you need a local installation of Matlab on your computer to run steps involving the optical flow algorithm. gbeflow was developed using Matlab 2017b, but there are not any dependences known to this specific version. We will run Matlab scripts out of python so no Matlab knowledge is required. However, Matlab is currently only compatible with Python 3.6, so we will need to set up an environment to specifically run 3.6.
+The optical flow algorithm which gbeflow relies on is written in Matlab `(Vig et al. 2016)`__. For more information on optical flow and the algorithm, checkout :ref:`opticalflow`. For the purposes of installation and setup, all you need to know is that you need a local installation of Matlab on your computer to run steps involving the optical flow algorithm. gbeflow was developed using Matlab 2017b, but there are not any dependences known to this specific version. We will run Matlab scripts out of python so no Matlab knowledge is required. However, Matlab is currently only compatible with Python 3.6, so we will need to set up an environment to specifically run 3.6. Once we have the correct environment set up, we will install a matlab engine for python.
 
 .. _vig: https://www.sciencedirect.com/science/article/pii/S0006349516300339?via%3Dihub
 
 __ vig_
 
-Environment Setup
-^^^^^^^^^^^^^^^^^^
-For simplicity, there will (hopefully) be an environment file, which enables you to setup a virtual environment in Anaconda with all the appropriate dependencies. This file should be downloaded during the installation steps below, but it is also available here_. Checkout the anaconda navigator docs_ for information on how to setup a new environment based on a specification file.
-
-.. _here: https://github.com/msschwartz21/germband-extension/blob/master/environment.yml
-
-.. _docs: https://docs.anaconda.com/anaconda/navigator/tutorials/manage-environments/#importing-an-environment
-
-Installation
+Setup
 --------------
 The code for gbeflow is hosted on Github_. Users can clone the repository by running the following code in the command line
 
@@ -46,12 +30,6 @@ The code for gbeflow is hosted on Github_. Users can clone the repository by run
     git clone https://github.com/msschwartz21/germband-extension.git
     
 Alternatively, the current version of the repository can be downloaded as a zip file `here`__.
-    
-After cloning the repository, gbeflow can be installed in developer mode by running the following command from the root of the gbeflow directory
-
-.. code-block:: bash
-
-    pip install -e .
 
 .. _Github: https://github.com/msschwartz21/germband-extension
 
@@ -59,6 +37,59 @@ After cloning the repository, gbeflow can be installed in developer mode by runn
 
 __ zip_
 
+Environment Setup
+^^^^^^^^^^^^^^^^^^
+For simplicity, there is a script that enables you to setup a virtual environment in Anaconda with all the appropriate dependencies. This file should be downloaded during the installation steps below, but it is also available here_. To setup the environment run the following command in your terminal from the root of the germband-extension directory.
+
+- On windows and macs, ``sh setup_env.sh``
+
+This script will create an anaconda virtual environment named python36. You can activate the environment by running the following:
+
+- On windows, ``activate python36``
+- On macs, ``source activate python36``
+
+When you are done with the environment run the following to deactivate:
+
+- On windows, ``deactivate``
+- On macs, ``source deactivate``
+
+.. _here: https://github.com/msschwartz21/germband-extension/blob/master/setup_env.sh
+
+.. _docs: https://docs.anaconda.com/anaconda/navigator/tutorials/manage-environments/#importing-an-environment
+
+Matlab Installation
+^^^^^^^^^^^^^^^^^^^^
+Matlab includes a python engine with its default installation. In order to install the engine as a python module, follow the instructions listed here_. Make sure that the python 3.6 environment is active by running ``source activate python36`` or ``activate python36``.
+
+.. _here: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
+
+Installation
+^^^^^^^^^^^^^
+Now that we have a python 3.6 environment setup, we are ready to locally install gbeflow. From the terminal, run the following code to enter the python36 environment and install gbeflow. Begin by navigating to the root of the gbeflow directory.
+
+On windows, run the following:
+
+.. code-block:: shell
+
+	$ activate python36
+	$ pip install -e .
+	$ deactivate
+
+On macs, run the following:
+
+.. code-block:: shell
+	
+	$ source activate python36
+	$ pip install -e .
+	$ source deactivate
+
+API
+-----
+Documentation is available on `Read the Docs`__.
+
+.. _rtd: https://germband-extension.readthedocs.io/en/latest/
+
+__ rtd_
 
 License
 --------

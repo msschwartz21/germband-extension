@@ -5,6 +5,9 @@
 
 Welcome to gbeflow's documentation!
 ===================================
+   
+.. include:: ../README.rst
+   
 
 .. toctree::
    :maxdepth: 1
@@ -14,12 +17,6 @@ Welcome to gbeflow's documentation!
    source/opticalflow
    source/datamanagement
    source/masking
-   
-   
-.. include:: ../README.rst
-   
-
-
 
 Indices and tables
 ==================
