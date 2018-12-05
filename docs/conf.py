@@ -16,6 +16,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('../'))
+sys.path.insert(0, os.path.abspath('../notebooks'))
 
 from unittest.mock import MagicMock
 
@@ -200,3 +201,9 @@ epub_exclude_files = ['search.html']
 #                         'skimage.measure','tqdm','scipy','scipy.interpolate',
 #                         'matplotlib'
 #                        ]
+    
+nbsphinx_prolog = """
+Go there: https://github.com/msschwartz21/germband-extension/tree/master/notebooks/{{ env.doc2path(env.docname, base=None) }}
+
+----
+"""
