@@ -52,8 +52,7 @@ release = '0.0.0'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.mathjax',
-    'sphinx.ext.napoleon',
-    'nbsphinx'
+    'sphinx.ext.napoleon'
 ]
 
 napoleon_google_docstring = False
@@ -201,9 +200,3 @@ epub_exclude_files = ['search.html']
 #                         'skimage.measure','tqdm','scipy','scipy.interpolate',
 #                         'matplotlib'
 #                        ]
-    
-nbsphinx_prolog = """
-Go there: https://github.com/msschwartz21/germband-extension/tree/master/notebooks/{{ env.doc2path(env.docname, base=None) }}
-
-----
-"""
