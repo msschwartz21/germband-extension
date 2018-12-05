@@ -7,7 +7,10 @@ We want to eliminate the background by segmenting the embryo from the background
 
 Basic Approach
 ---------------
-See `20181017-final_contour_based_segmentation.ipynb <contourntbk_>`_ for details on the contour based approach. 
+
+.. include:: 20181017-final_contour_based_segmentation.rst
+
+Following the development of the method above, an object was created within gbeflow to handle the tasks associated with contouring: :class:`MaskEmbryo`. An example of using this new class is included below.
 
 .. code-block:: python
 
