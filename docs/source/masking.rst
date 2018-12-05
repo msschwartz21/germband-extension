@@ -11,7 +11,30 @@ See `20181017-final_contour_based_segmentation.ipynb <contourntbk_>`_ for detail
 
 .. code-block:: python
 
+    import gbeflow
+    import tifffile
+    import bebi103
     
+    # Import sample from tiff
+    img = tifffile.imread(filepath)
+    
+    # Select endpoints of embryo for ellipse calculation
+    clk = bebi103.viz.record_clicks(raw[0],flip=False)
+    
+    # Save points to dataframe after selection
+    points = clk.to_df()
+    
+    # Initialize object with selected points
+    me = gbeflow.MaskEmbryo(points)
+    
+    # Contour embryo based on ellipse calculated during initialization
+    # Input accepts only 2d data
+    mask = me.contour_embryo(img[0])
+    
+    # Apply binary mask to the raw image
+    mask_img = me.mask_image(img,mask)
+    
+After running the code above, this workflow can be applied to the remaining timepoints and saved as a tif.
 
 Limitations
 -------------

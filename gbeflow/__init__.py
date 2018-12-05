@@ -163,6 +163,7 @@ class MaskEmbryo():
         ----------
         points : pd.DataFrame
             Contains the columns x and y with 2 rows
+        
         Returns
         -------
         self.ell, self.rell, self.fell
