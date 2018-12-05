@@ -15,8 +15,6 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
-sys.path.insert(0, os.path.abspath('../'))
-sys.path.insert(0, os.path.abspath('../notebooks'))
 
 from unittest.mock import MagicMock
 
@@ -25,7 +23,8 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
         return MagicMock()
 
-MOCK_MODULES = ['av']
+MOCK_MODULES = ['av','h5py','czifile','bebi103','tiffile',
+               'tqdm']
 sys.modules.update((mod_name, Mock()) for mod_name in MOCK_MODULES)
 
 # -- Project information -----------------------------------------------------
