@@ -1,6 +1,5 @@
 h5py
 scikit-image
-bebi103
 czifile
 tifffile
 tqdm
