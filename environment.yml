@@ -24,5 +24,6 @@ dependencies:
     - czifile
     - matlabengineforpython
     - sphinx-rtd-theme
+    - nbsphinx
     - tifffile
 
