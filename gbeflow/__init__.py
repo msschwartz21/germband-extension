@@ -22,6 +22,24 @@ def read_hyperstack(fpath,dataset='channel1',tmax=166):
     '''
     Read in an hdf5 hyperstack where each timepoint is a group
     containing two channels which are saved as datapoints
+
+    .. warning:: Doesn't work on files that were written with :func:`write_hyperstack`. Tiff files are probably better.
+
+    Parameters
+    -----------
+    fpath : str
+        Relative or absolute path to data file
+    dataset : str, optional
+        Default = 'channel1'
+        Specifies the key to select a dataset from the h5 file
+    tmax : int, optional
+        Default = 166
+        Number of expected time frames
+
+    Returns
+    --------
+    np.array
+        Array with h5 data in dimensions txy
     '''
     
     # Open file object
@@ -68,6 +86,14 @@ def write_hyperstack(hst,fpath,dataset='channel1'):
 def imshow(img,figsize=(10,8)):
     '''
     Show image using matplotlib and including colorbar
+
+    Parameters
+    -----------
+    img : np.array
+        2D array to display
+    figsize : tuple, optional
+        Default = (10,8)
+        Tuple passed to matplotlib to specify figure size
     '''
     
     fig,ax = plt.subplots(figsize=figsize)
