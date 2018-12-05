@@ -24,7 +24,7 @@ class Mock(MagicMock):
     def __getattr__(cls, name):
         return MagicMock()
 
-MOCK_MODULES = ['av','h5py','czifile','bebi103','tiffile',
+MOCK_MODULES = ['av','h5py','czifile','bebi103','tifffile',
                'tqdm','numpy','pandas','skimage',
                 'scikit-image','scipy','scipy.interpolate',
                'skimage.filters','skimage.measure',
