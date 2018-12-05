@@ -29,17 +29,15 @@ The code for gbeflow is hosted on Github_. Users can clone the repository by run
 
     git clone https://github.com/msschwartz21/germband-extension.git
     
-Alternatively, the current version of the repository can be downloaded as a zip file `here`__.
+Alternatively, the current version of the repository can be downloaded as a zip file `here <zip_>`_.
 
 .. _Github: https://github.com/msschwartz21/germband-extension
 
 .. _zip: https://github.com/msschwartz21/germband-extension/archive/master.zip
 
-__ zip_
-
 Environment Setup
 ^^^^^^^^^^^^^^^^^^
-For simplicity, there is a script that enables you to setup a virtual environment in Anaconda with all the appropriate dependencies. This file should be downloaded during the installation steps below, but it is also available here_. To setup the environment run the following command in your terminal from the root of the germband-extension directory.
+For simplicity, there is a script that enables you to setup a virtual environment in Anaconda with all the appropriate dependencies. This file should be downloaded during the installation steps below, but it is also available `here <setupenv_>`_. To setup the environment run the following command in your terminal from the root of the germband-extension directory.
 
 - On windows and macs, ``sh setup_env.sh``
 
@@ -53,15 +51,15 @@ When you are done with the environment run the following to deactivate:
 - On windows, ``deactivate``
 - On macs, ``source deactivate``
 
-.. _here: https://github.com/msschwartz21/germband-extension/blob/master/setup_env.sh
+.. _setupenv: https://github.com/msschwartz21/germband-extension/blob/master/setup_env.sh
 
 .. _docs: https://docs.anaconda.com/anaconda/navigator/tutorials/manage-environments/#importing-an-environment
 
 Matlab Installation
 ^^^^^^^^^^^^^^^^^^^^
-Matlab includes a python engine with its default installation. In order to install the engine as a python module, follow the instructions listed here_. Make sure that the python 3.6 environment is active by running ``source activate python36`` or ``activate python36``.
+Matlab includes a python engine with its default installation. In order to install the engine as a python module, follow the instructions listed `here <matlabengine_>`_. Make sure that the python 3.6 environment is active by running ``source activate python36`` or ``activate python36``.
 
-.. _here: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
+.. _matlabengine: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
 
 Installation
 ^^^^^^^^^^^^^
@@ -85,13 +83,13 @@ On macs, run the following:
 
 API
 -----
-Documentation is available on `Read the Docs`__.
+Documentation is available on `Read the Docs <rtd_>`_.
 
 .. _rtd: https://germband-extension.readthedocs.io/en/latest/
 
-__ rtd_
-
 License
 --------
-gbeflow is licensed under the MIT License.
+gbeflow is licensed under the `MIT License <mit_>`_.
+
+.. _mit: https://github.com/msschwartz21/germband-extension/blob/master/LICENSE
 
