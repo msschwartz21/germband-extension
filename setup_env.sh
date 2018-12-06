@@ -5,3 +5,5 @@ pip install czifile;
 pip install tifffile;
 pip install sphinx-rtd-theme;
 pip install bebi103;
+
+# nb_conda_kernels

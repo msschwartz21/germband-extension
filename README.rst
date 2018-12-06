@@ -33,51 +33,52 @@ Alternatively, the current version of the repository can be downloaded as a zip 
 
 .. _zip: https://github.com/msschwartz21/germband-extension/archive/master.zip
 
-Environment Setup
-^^^^^^^^^^^^^^^^^^
-For simplicity, there is a script that enables you to setup a virtual environment in Anaconda with all the appropriate dependencies. This file should be downloaded during the installation steps below, but it is also available `here <setupenv_>`_. To setup the environment run the following command in your terminal from the root of the germband-extension directory.
+Python Environment Setup
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+For simplicity, there is a script that enables you to setup a virtual environment in Anaconda with all the appropriate dependencies. This file should be downloaded during the installation steps below, but it is also available `here <setupenv_>`_. To setup the environment run the following commands in your terminal from the root of the germband-extension directory.
 
-- On windows and macs, ``sh setup_env.sh``
+.. code-block:: bash
 
-This script will create an anaconda virtual environment named python36. You can activate the environment by running the following:
+    # Create python3.6 virtual environment
+    conda create -n python36 python=3.6 anaconda h5py bokeh tqdm numpydoc
+    
+    # Activate new environment
+    conda activate python36
+    
+    # Install remaining conda packages 
+    conda install nodejs
+    conda install -c conda-forge av altair OpenPIV
+    
+    # Install pip packages
+    pip install czifile tifffile sphinx-rtd-theme bebi103 nb_conda_kernels
 
-- On windows, ``activate python36``
-- On macs, ``source activate python36``
+This script will create an anaconda virtual environment named python36. You can activate the environment by running ``conda activate python36``. When you are done with the environment run ``conda deactivate`` to return to the basic python environment.
 
-When you are done with the environment run the following to deactivate:
+When we are working in Jupyter Notebooks, nb_conda_kernels_ will provide the option to launch the notebook from any available virtual environment including python36. Justin Bois has a great introduction to Jupyter notebooks available `here <bebi103_>`_.
 
-- On windows, ``deactivate``
-- On macs, ``source deactivate``
+.. _nb_conda_kernels: https://github.com/Anaconda-Platform/nb_conda_kernels
+
+.. _bebi103: http://bebi103.caltech.edu.s3-website-us-east-1.amazonaws.com/2018/tutorials/t0b_intro_to_jupyterlab.html
 
 .. _setupenv: https://github.com/msschwartz21/germband-extension/blob/master/setup_env.sh
 
 .. _docs: https://docs.anaconda.com/anaconda/navigator/tutorials/manage-environments/#importing-an-environment
 
-Matlab Installation
-^^^^^^^^^^^^^^^^^^^^
+Matlab Engine Installation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Matlab includes a python engine with its default installation. In order to install the engine as a python module, follow the instructions listed `here <matlabengine_>`_. Make sure that the python 3.6 environment is active by running ``source activate python36`` or ``activate python36``.
 
 .. _matlabengine: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
 
-Installation
-^^^^^^^^^^^^^
-Now that we have a python 3.6 environment setup, we are ready to locally install gbeflow. From the terminal, run the following code to enter the python36 environment and install gbeflow. Begin by navigating to the root of the gbeflow directory.
-
-On windows, run the following:
+gbeflow Installation
+^^^^^^^^^^^^^^^^^^^^^^
+Now that we have a python 3.6 environment setup, we are ready to locally install gbeflow. From the terminal, run the following code to enter the python36 environment and install gbeflow. Begin by navigating to the root of the gbeflow directory and run the following from the command line.
 
 .. code-block:: shell
 
-	$ activate python36
+	$ conda activate python36
 	$ pip install -e .
-	$ deactivate
-
-On macs, run the following:
-
-.. code-block:: shell
-	
-	$ source activate python36
-	$ pip install -e .
-	$ source deactivate
+	$ conda deactivate
 
 API
 -----

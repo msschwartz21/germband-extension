@@ -34,6 +34,8 @@ Embryo alignment
 -----------------
 During imaging, embryos are not expected to be aligned in any particular orientation in the XY plane. While we will accept only embryos that have an approximate lateral mounting, we need to correct XY positioning in post-processing. In the notebook rotate_embryo_, a workflow is proposed that accepts user inputs in order to guide the alignment process. The user input functions rely on  ``bebi103`` which is a package written by Justin Bois for the BE/Bi103 course that is still under active development. Below is an example of what processing a single sample might look like.
 
+.. include:: 20181203-gbe_mutant_processing.rst
+
 .. code-block:: python
 
     # Import modules
