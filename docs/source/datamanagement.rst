@@ -68,6 +68,11 @@ During imaging, embryos are not expected to be aligned in any particular orienta
     
     # Save rotated stack to file
     tifffile.imsave(outpath,data=rimg)
+    
+Manual curation of orientation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. todo:: need to write a section on manually flipping the embryos for consistent orientation 
 
 The final result of this workflow is that all samples are aligned dorsal up with the anterior end of the embryo to the left. This consistent alignment should facilitate future comparisons of the results of optical flow. 
 
