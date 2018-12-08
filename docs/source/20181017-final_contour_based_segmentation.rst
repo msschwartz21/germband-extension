@@ -1,7 +1,7 @@
 Segment the embryo from the background in order to clearly isolate
 changes in signal associated with germ band extension
 
-.. code:: ipython3
+.. code-block:: python
 
     import numpy as np
     import matplotlib.pyplot as plt
@@ -22,18 +22,18 @@ Data Import
 Read in hdf5 hyperstack as a 3d numpy array. Convert to float for ease
 of processing.
 
-.. code:: ipython3
+.. code-block:: python
 
     hst = img_as_float(ut.read_hyperstack('../data/wt_gbe_20180110.h5'))
 
 Select a single image from the first timepoint to use as a test case for
 segmentation development
 
-.. code:: ipython3
+.. code-block:: python
 
     img = hst[0]
 
-.. code:: ipython3
+.. code-block:: python
 
     ut.imshow(img)
 
@@ -63,7 +63,7 @@ To start, we will approximate an ellipse that is slightly bigger than
 the size of the embryo, which will provide a starting point for contour
 fitting.
 
-.. code:: ipython3
+.. code-block:: python
 
     # Values to calculate the ellipse over using parametrized trigonometric fxns
     s = np.linspace(0, 2*np.pi, 400)
@@ -86,12 +86,12 @@ approximated ellipse to the contour of the embryo. The kwarg parameters
 for this function were copied based on the `active countour
 tutorial <http://scikit-image.org/docs/dev/auto_examples/edges/plot_active_contours.html>`__.
 
-.. code:: ipython3
+.. code-block:: python
 
     snake = active_contour(gaussian(img, 3),
                            init, alpha=0.015, beta=10, gamma=0.001)
 
-.. code:: ipython3
+.. code-block:: python
 
     fig,ax = plt.subplots(figsize=(10,10))
     ax.imshow(img)
@@ -127,7 +127,7 @@ Skimage's ``grid_points_in_poly`` function takes a set of points
 defining a shape (``snake``) and identifies which points over a given
 raster area fall within the input shape.
 
-.. code:: ipython3
+.. code-block:: python
 
     mask = grid_points_in_poly(img.shape, snake).T
     plt.imshow(mask)
@@ -145,7 +145,7 @@ raster area fall within the input shape.
 .. image:: output_20_1.png
 
 
-.. code:: ipython3
+.. code-block:: python
 
     im_masked = img.copy()
     im_masked[~mask] = 0
@@ -160,7 +160,7 @@ raster area fall within the input shape.
 Write a function to fit a contour to a new embryo
 --------------------------------------------------
 
-.. code:: ipython3
+.. code-block:: python
 
     def calc_ellipse(center_x,center_y,radius_x,radius_y):
         '''
@@ -177,7 +177,7 @@ Write a function to fit a contour to a new embryo
         
         return(init)
 
-.. code:: ipython3
+.. code-block:: python
 
     def contour_embryo(img,init):
         '''
@@ -202,13 +202,13 @@ Apply mask to hyperstack
 
 Check ellipse approximation on first and last timepoints
 
-.. code:: ipython3
+.. code-block:: python
 
     center_x,center_y = 500,530
     radius_x,radius_y = 550,250
     ellipse = calc_ellipse(center_x,center_y,radius_x,radius_y)
 
-.. code:: ipython3
+.. code-block:: python
 
     fig,ax = plt.subplots(1,2,figsize=(10,8))
     ax[0].imshow(hst[0])
@@ -229,13 +229,13 @@ Check ellipse approximation on first and last timepoints
 .. image:: output_28_1.png
 
 
-.. code:: ipython3
+.. code-block:: python
 
     # Loop through each timepoint in hyperstack
     for t in range(hst.shape[0]):
         hst[t] = contour_embryo(hst[t],ellipse)
 
-.. code:: ipython3
+.. code-block:: python
 
     fig,ax = plt.subplots(1,2,figsize=(10,8))
     ax[0].imshow(hst[0])

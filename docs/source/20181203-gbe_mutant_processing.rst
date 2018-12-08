@@ -1,7 +1,7 @@
 Approach
 ----------
 
-.. code:: ipython3
+.. code-block:: python
 
     import os
     import glob
@@ -30,7 +30,7 @@ Approach
 Import first time point from each original tiff
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: ipython3
+.. code-block:: python
 
     files = glob.glob(os.path.abspath('../data/original/20181130-gbe_mutants_brt/*.tif'))
     files = files
@@ -40,7 +40,7 @@ first timepoint with both channels. This makes it possible so that we
 can look at a sample of all of the data at once. Since the total dataset
 is >20Gb we can't load it directly into memory.
 
-.. code:: ipython3
+.. code-block:: python
 
     %%time
     raw = {}
@@ -61,7 +61,7 @@ Try selecting two points on the dorsal surface that represent the linear
 plane of the dorsal side. This approach should hopefully be less
 sensitive to variability in how the user picks the points.
 
-.. code:: ipython3
+.. code-block:: python
 
     clicks = []
     for f in files:
@@ -98,7 +98,7 @@ sensitive to variability in how the user picks the points.
 
 Extract the points selected for each image into a dataframe.
 
-.. code:: ipython3
+.. code-block:: python
 
     Ldf = []
     for clk in clicks:
@@ -137,7 +137,7 @@ Extract the points selected for each image into a dataframe.
       </thead>
       <tbody>
         <tr>
-          <th rowspan="2" valign="top">/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_05_eve.tif</th>
+          <th rowspan="2" valign="top">/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_05_eve.tif</th>
           <th>0</th>
           <td>583.782051</td>
           <td>811.211429</td>
@@ -148,7 +148,7 @@ Extract the points selected for each image into a dataframe.
           <td>311.188571</td>
         </tr>
         <tr>
-          <th rowspan="2" valign="top">/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_21_kr.tif</th>
+          <th rowspan="2" valign="top">/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_21_kr.tif</th>
           <th>0</th>
           <td>182.525641</td>
           <td>412.960000</td>
@@ -159,7 +159,7 @@ Extract the points selected for each image into a dataframe.
           <td>829.177143</td>
         </tr>
         <tr>
-          <th rowspan="2" valign="top">/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_17_kr.tif</th>
+          <th rowspan="2" valign="top">/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_17_kr.tif</th>
           <th>0</th>
           <td>368.294872</td>
           <td>650.411429</td>
@@ -170,7 +170,7 @@ Extract the points selected for each image into a dataframe.
           <td>206.422857</td>
         </tr>
         <tr>
-          <th rowspan="2" valign="top">/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_23_kr.tif</th>
+          <th rowspan="2" valign="top">/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_23_kr.tif</th>
           <th>0</th>
           <td>334.474359</td>
           <td>685.405714</td>
@@ -187,7 +187,7 @@ Extract the points selected for each image into a dataframe.
 
 Reshape ``points`` array to have one row per sample.
 
-.. code:: ipython3
+.. code-block:: python
 
     points = points.reset_index(level=1)
     points.head()
@@ -222,31 +222,31 @@ Reshape ``points`` array to have one row per sample.
       </thead>
       <tbody>
         <tr>
-          <th>/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_05_eve.tif</th>
+          <th>/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_05_eve.tif</th>
           <td>0</td>
           <td>583.782051</td>
           <td>811.211429</td>
         </tr>
         <tr>
-          <th>/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_05_eve.tif</th>
+          <th>/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_05_eve.tif</th>
           <td>1</td>
           <td>819.794872</td>
           <td>311.188571</td>
         </tr>
         <tr>
-          <th>/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_21_kr.tif</th>
+          <th>/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_21_kr.tif</th>
           <td>0</td>
           <td>182.525641</td>
           <td>412.960000</td>
         </tr>
         <tr>
-          <th>/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_21_kr.tif</th>
+          <th>/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_21_kr.tif</th>
           <td>1</td>
           <td>380.769231</td>
           <td>829.177143</td>
         </tr>
         <tr>
-          <th>/Users/morganschwartz/Code/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_17_kr.tif</th>
+          <th>/Users/morganschwartz/code-block/germband-extension/data/original/20181130-gbe_mutants_brt/20181130-gbe_mutants_brt_17_kr.tif</th>
           <td>0</td>
           <td>368.294872</td>
           <td>650.411429</td>
@@ -264,11 +264,11 @@ Calculate a line for each embryo
 
 .. math::  m = \frac{y_2 - y_1}{x_2 - x_1} 
 
-.. code:: ipython3
+.. code-block:: python
 
     line = gbeflow.calc_line(points)
 
-.. code:: ipython3
+.. code-block:: python
 
     line = line.reset_index().rename(columns={'index':'f'})
     line.head()
@@ -309,7 +309,7 @@ Calculate a line for each embryo
       <tbody>
         <tr>
           <th>0</th>
-          <td>/Users/morganschwartz/Code/germband-extension/...</td>
+          <td>/Users/morganschwartz/code-block/germband-extension/...</td>
           <td>583.782051</td>
           <td>819.794872</td>
           <td>811.211429</td>
@@ -320,7 +320,7 @@ Calculate a line for each embryo
         </tr>
         <tr>
           <th>1</th>
-          <td>/Users/morganschwartz/Code/germband-extension/...</td>
+          <td>/Users/morganschwartz/code-block/germband-extension/...</td>
           <td>182.525641</td>
           <td>380.769231</td>
           <td>412.960000</td>
@@ -331,7 +331,7 @@ Calculate a line for each embryo
         </tr>
         <tr>
           <th>2</th>
-          <td>/Users/morganschwartz/Code/germband-extension/...</td>
+          <td>/Users/morganschwartz/code-block/germband-extension/...</td>
           <td>368.294872</td>
           <td>550.384615</td>
           <td>650.411429</td>
@@ -342,7 +342,7 @@ Calculate a line for each embryo
         </tr>
         <tr>
           <th>3</th>
-          <td>/Users/morganschwartz/Code/germband-extension/...</td>
+          <td>/Users/morganschwartz/code-block/germband-extension/...</td>
           <td>334.474359</td>
           <td>352.769231</td>
           <td>685.405714</td>
@@ -362,7 +362,7 @@ Plot embryos with line on top
 
 .. math::  y = m(x - x_1) + y_1
 
-.. code:: ipython3
+.. code-block:: python
 
     # Create list to collect plot objects
     Lp = []
@@ -410,9 +410,9 @@ The angle of rotation is calculated as follows
 
 .. math::  \theta = \arctan\bigg(\frac{y_2-y_1}{x_2-x_1}\bigg)
 
-This calculation can be coded using the ``np.arctan2``, which has two arguments that correspond to :math:`\Delta y` and :math:`\Delta x`.
+This calculation can be code-blockd using the ``np.arctan2``, which has two arguments that correspond to :math:`\Delta y` and :math:`\Delta x`.
 
-.. code:: ipython3
+.. code-block:: python
 
     line = gbeflow.calc_embryo_theta(line)
     line.head()
@@ -454,7 +454,7 @@ This calculation can be coded using the ``np.arctan2``, which has two arguments 
       <tbody>
         <tr>
           <th>0</th>
-          <td>/Users/morganschwartz/Code/germband-extension/...</td>
+          <td>/Users/morganschwartz/code-block/germband-extension/...</td>
           <td>583.782051</td>
           <td>819.794872</td>
           <td>811.211429</td>
@@ -466,7 +466,7 @@ This calculation can be coded using the ``np.arctan2``, which has two arguments 
         </tr>
         <tr>
           <th>1</th>
-          <td>/Users/morganschwartz/Code/germband-extension/...</td>
+          <td>/Users/morganschwartz/code-block/germband-extension/...</td>
           <td>182.525641</td>
           <td>380.769231</td>
           <td>412.960000</td>
@@ -478,7 +478,7 @@ This calculation can be coded using the ``np.arctan2``, which has two arguments 
         </tr>
         <tr>
           <th>2</th>
-          <td>/Users/morganschwartz/Code/germband-extension/...</td>
+          <td>/Users/morganschwartz/code-block/germband-extension/...</td>
           <td>368.294872</td>
           <td>550.384615</td>
           <td>650.411429</td>
@@ -490,7 +490,7 @@ This calculation can be coded using the ``np.arctan2``, which has two arguments 
         </tr>
         <tr>
           <th>3</th>
-          <td>/Users/morganschwartz/Code/germband-extension/...</td>
+          <td>/Users/morganschwartz/code-block/germband-extension/...</td>
           <td>334.474359</td>
           <td>352.769231</td>
           <td>685.405714</td>
@@ -515,7 +515,7 @@ same time, we will currently only rotate the first timepoint to check
 that it worked. After we have determined all necessary manipulations for
 each embryo, we will run the actual rotation.
 
-.. code:: ipython3
+.. code-block:: python
 
     # Dataframe to save first timepoint from each rotate embryo
     rot = {}
@@ -542,7 +542,7 @@ each embryo, we will run the actual rotation.
     100%|██████████| 4/4 [00:00<00:00,  6.63it/s]
 
 
-.. code:: ipython3
+.. code-block:: python
 
     bokeh.io.show(bokeh.layouts.gridplot(Lp,ncols=2))
 
