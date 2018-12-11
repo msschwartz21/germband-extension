@@ -1,9 +1,9 @@
-Data Management
-================
+Data Preprocessing
+====================
 
 Import raw microscopy data
 ----------------------------
-Data can be imported from czi and tiff files. The :class:`CziImport` wraps the czifile_ module published by Christoph Gohlke to read the propriatory zeiss file format. The underlying datastructure of czi's varies based on the collection parameters, so the :class:`CziImport` may not work reliabily. 
+Data can be imported from czi and tiff files. The :class:`gbeflow.CziImport` wraps the czifile_ module published by Christoph Gohlke to read the propriatory zeiss file format. The underlying datastructure of czi's varies based on the collection parameters, so the :class:`gbeflow.CziImport` may not work reliabily. 
 
 .. code-block:: python
 
@@ -32,7 +32,7 @@ Alternativly, data can be read from tiff files saved using Fiji_. The module tif
 
 Embryo alignment
 -----------------
-During imaging, embryos are not expected to be aligned in any particular orientation in the XY plane. While we will accept only embryos that have an approximate lateral mounting, we need to correct XY positioning in post-processing. In the notebook rotate_embryo_, a workflow is proposed that accepts user inputs in order to guide the alignment process. The user input functions rely on  ``bebi103`` which is a package written by Justin Bois for the BE/Bi103 course that is still under active development. Below is an example of what processing a single sample might look like.
+During imaging, embryos are not expected to be aligned in any particular orientation in the XY plane. While we will accept only embryos that have an approximate lateral mounting, we need to correct XY positioning in post-processing. In the notebook rotate_embryo_, a workflow is proposed that accepts user inputs in order to guide the alignment process. The user input functions rely on bebi103_ which is a package written by Justin Bois for the BE/Bi103 course that is still under active development. Below is an example of what processing a single sample might look like.
 
 .. include:: 20181203-gbe_mutant_processing.rst
 
@@ -72,15 +72,13 @@ During imaging, embryos are not expected to be aligned in any particular orienta
 Manual curation of orientation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. todo:: need to write a section on manually flipping the embryos for consistent orientation 
+.. warning:: need to write a section on manually flipping the embryos for consistent orientation 
 
 The final result of this workflow is that all samples are aligned dorsal up with the anterior end of the embryo to the left. This consistent alignment should facilitate future comparisons of the results of optical flow. 
 
-Optical flow outputs
----------------------
+.. include:: masking.rst
 
-Optical flow transformations
-------------------------------
+
 
 .. _rotate_embryo: https://github.com/msschwartz21/germband-extension/blob/master/notebooks/20181116-rotate_embryo.ipynb
 
@@ -91,3 +89,5 @@ Optical flow transformations
 .. _Fiji: https://fiji.sc/
 
 .. _tifffile: https://pypi.org/project/tifffile/
+
+.. _bebi103: https://github.com/justinbois/bebi103

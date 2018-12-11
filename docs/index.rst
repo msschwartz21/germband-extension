@@ -14,9 +14,8 @@ Welcome to gbeflow's documentation!
    :caption: Contents:
    
    source/gbeflow
-   source/opticalflow
    source/datamanagement
-   source/masking
+   source/opticalflow
 
 Indices and tables
 ==================
