@@ -16,6 +16,7 @@ Welcome to gbeflow's documentation!
    source/gbeflow
    source/datamanagement
    source/opticalflow
+   source/mesoderm
 
 Indices and tables
 ==================

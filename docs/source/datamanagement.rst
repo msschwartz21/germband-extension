@@ -72,7 +72,18 @@ During imaging, embryos are not expected to be aligned in any particular orienta
 Manual curation of orientation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. warning:: need to write a section on manually flipping the embryos for consistent orientation 
+After the rotation based on :math:`\theta` has been applied, the embryos should be positioned such that the AP axis is horizontal. However, the rotation does not gurantee that the embryo will be positioned with anterior left and dorsal up. At this point, the user can individually specify any additional rotations to correct the embryo's orientation. The following examples are typically sufficient to correct most orientation errors:
+
+.. code-block:: python
+
+    # Rotate by 180 degrees around center point
+    img = scipy.ndimage.rotate(img,180)
+    
+    # Flip horizontally by specifying a specific axis
+    img = np.flip(img,axis=-1)
+    
+    # Flip vertically
+    img = np.flip(img,axis=-1)
 
 The final result of this workflow is that all samples are aligned dorsal up with the anterior end of the embryo to the left. This consistent alignment should facilitate future comparisons of the results of optical flow. 
 

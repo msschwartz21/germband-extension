@@ -1,5 +1,3 @@
-Approach
-----------
 
 .. code-block:: python
 
@@ -47,11 +45,6 @@ is >20Gb we can't load it directly into memory.
     for f in files:
         raw[f] = tifffile.imread(f,key=(0,1))
 
-
-.. parsed-literal::
-
-    CPU times: user 524 ms, sys: 102 ms, total: 626 ms
-    Wall time: 177 ms
 
 
 Select points to use for alignment

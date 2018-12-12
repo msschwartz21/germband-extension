@@ -29,7 +29,8 @@ The ``OpticalFlow`` function takes a set of parameters that are described in the
     
 Selecting Parameter Values
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. warning:: Write about parameter sweep
+
+BlurSTD and BoxSize are the two parameters that are most difficult to determine for a naive user. In order to determine appropriate values for brightfield data, I tried running combinations of BoxSize={10,20,30,40,50} and BlurSize={1,4,10,20,30} and reviewed the outputs to select parameter values that had the least noise without obscuring features in the data. This same approach could be applied to any new data types that are investigated in the future.
     
 Running OpticalFlow from python
 --------------------------------
@@ -97,8 +98,6 @@ Finally, the ``OpticalFlow.m`` script and Matlab seem happiest when working with
 Wrangling the optical flow ouput data
 --------------------------------------
 
-.. warning:: write about data wrangling for vector data
-
 ``OpticalFlow.m`` returns 5 data objects ``[X,Y,Vx,Vy,mov]`` that are saved to output files when using ``OpticalFlowOutput.m``. Given a user input which defines the base of the output file names hereafter refered to as ``<name>``, ``OpticalFlowOutput`` saves the 5 data objects.
 
 .. csv-table:: Optical Flow Output
@@ -113,7 +112,7 @@ Wrangling the optical flow ouput data
     
 The function :func:`gbeflow.tidy_vector_data()` loads the 4 vector files saved by optical flow ouput by looking for the root of the filename <name>. The four data files are compiled into a single dataframe that contains five columns: frame, x, y, vx, and vy. The dataframe which the function returns can be saved to a csv file using ``pandas.DataFrame.to_csv()``.
 
-In order to facilitate interpolation and plotting, we also want to transform the data into an array based structure as opposed to a tidy dataframe where each row corresponds to a single point/velocity vector. The function :func:`gbeflow.reshape_vector_data` accepts the dataframe output by :func:`gbeflow.tidy_vector_data` as an input. It creates a set of arrays that conform to the following dimensions: # of time points $\times$ # of unique x values $\times$ # of unique y values. The function returns five arrays following this convention: ``tt``,``xx``,``yy``,``vx``, and ``vy``. If we use the same index to select a value from each of the 5 arrays, we will get the t, x and y positions with the corresponding vx and vy velocity components.
+In order to facilitate interpolation and plotting, we also want to transform the data into an array based structure as opposed to a tidy dataframe where each row corresponds to a single point/velocity vector. The function :func:`gbeflow.reshape_vector_data` accepts the dataframe output by :func:`gbeflow.tidy_vector_data` as an input. It creates a set of arrays that conform to the following dimensions: # of time points :math:`\times` # of unique x values :math:`\times` # of unique y values. The function returns five arrays following this convention: ``tt``, ``xx``, ``yy``, ``vx``, and ``vy``. If we use the same index to select a value from each of the 5 arrays, we will get the t, x and y positions with the corresponding vx and vy velocity components.
 
 The following code is an example of how to import the results of optical flow after running the example code above.
 
@@ -170,3 +169,7 @@ Currently, the function that interpolates the vector fields for simulated cell t
 .. _rbv: https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.RectBivariateSpline.html
 
 .. _vig: https://www.sciencedirect.com/science/article/pii/S0006349516300339?via%3Dihub
+
+.. warning:: code examples for simulated tracking
+
+.. warning:: Include mention of the ability to plot ontop of existing videos

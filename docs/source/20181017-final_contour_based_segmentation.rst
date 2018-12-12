@@ -39,7 +39,7 @@ segmentation development
 
 
 
-.. image:: output_8_0.png
+.. image:: mask_figs/output_8_0.png
     :scale: 50 %
 
 
@@ -109,7 +109,7 @@ tutorial <http://scikit-image.org/docs/dev/auto_examples/edges/plot_active_conto
 
 
 
-.. image:: output_16_1.png
+.. image:: mask_figs/output_16_1.png
     :scale: 50 %
 
 
@@ -142,7 +142,7 @@ raster area fall within the input shape.
 
 
 
-.. image:: output_20_1.png
+.. image:: mask_figs/output_20_1.png
 
 
 .. code-block:: python
@@ -153,7 +153,7 @@ raster area fall within the input shape.
 
 
 
-.. image:: output_21_0.png
+.. image:: mask_figs/output_21_0.png
     :scale: 50 %
 
 
@@ -226,7 +226,7 @@ Check ellipse approximation on first and last timepoints
 
 
 
-.. image:: output_28_1.png
+.. image:: mask_figs/output_28_1.png
 
 
 .. code-block:: python
@@ -251,5 +251,5 @@ Check ellipse approximation on first and last timepoints
 
 
 
-.. image:: output_30_1.png
+.. image:: mask_figs/output_30_1.png
 
