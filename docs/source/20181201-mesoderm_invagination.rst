@@ -3,7 +3,7 @@ Calculate the time when mesoderm invagination occurs in order to align
 samples in time and to start point tracking at the start of germband
 invagination
 
-.. code:: python
+.. code-block:: python
 
     import numpy as np
     import pandas as pd
@@ -19,7 +19,7 @@ invagination
     
     import gbeflow
 
-.. code:: python
+.. code-block:: python
 
     fs = ['20180108_htl_glc_sc11_mmzm_rotate_brt',
      '20180108_htl_glc_sc2_mmzm_wp_rotate_brt',
@@ -34,7 +34,7 @@ invagination
 
 Select a single sample as a test case
 
-.. code:: python
+.. code-block:: python
 
     f = '20180110_htl_glc_sc14_mmzp_rotate_brt'
 
@@ -42,16 +42,16 @@ Select a single sample as a test case
 
 Load vector data and movie mesoderm_figs/output
 
-.. code:: python
+.. code-block:: python
 
     # vimg = gbeflow.load_avi_as_array(f+'.avi')
     vf = gbeflow.VectorField(f)
 
-.. code:: python
+.. code-block:: python
 
     expected = 35
 
-.. code:: python
+.. code-block:: python
 
     fig,ax = plt.subplots(figsize=(10,8))
     ax.imshow(vimg[expected])
@@ -67,7 +67,7 @@ Test metrics for detecting mesoderm invagination
 Sum of y component of vectors over time
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code-block:: python
 
     vf.vy.shape
 
@@ -80,11 +80,11 @@ Sum of y component of vectors over time
 
 
 
-.. code:: python
+.. code-block:: python
 
     ysum = np.sum(vf.vy,axis=(1,2))
 
-.. code:: python
+.. code-block:: python
 
     fig,ax = plt.subplots()
     ax.plot(ysum)
@@ -106,12 +106,12 @@ Sum of y component of vectors over time
 Try looking at the sum of only positive vy components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code-block:: python
 
     vfpos = np.copy(vf.vy)
     vfpos[vfpos<0] = 0
 
-.. code:: python
+.. code-block:: python
 
     ysum = np.sum(vfpos,axis=(1,2))
     fig,ax = plt.subplots()
@@ -134,11 +134,11 @@ Try looking at the sum of only positive vy components
 What about within an roi
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code-block:: python
 
     roi = np.s_[:,400:900,:]
 
-.. code:: python
+.. code-block:: python
 
     fig,ax = plt.subplots()
     ax.imshow(vimg[roi][35])
@@ -156,11 +156,11 @@ What about within an roi
 .. image:: mesoderm_figs/output_20_1.png
 
 
-.. code:: python
+.. code-block:: python
 
     np.interp(a, (a.min(), a.max()), (-1, +1))
 
-.. code:: python
+.. code-block:: python
 
     roirange = np.interp([400,900], (0,1368), (0,270))
     roirange
@@ -174,11 +174,11 @@ What about within an roi
 
 
 
-.. code:: python
+.. code-block:: python
 
     vroi = np.s_[:,int(roirange[0]):int(roirange[1]),:]
 
-.. code:: python
+.. code-block:: python
 
     vfpos[vroi].shape
 
@@ -191,7 +191,7 @@ What about within an roi
 
 
 
-.. code:: python
+.. code-block:: python
 
     ysum = np.sum(vfpos[vroi],axis=(1,2))
     fig,ax = plt.subplots()
@@ -214,11 +214,11 @@ What about within an roi
 Sum of the squared positive vy
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code-block:: python
 
     ysum = np.sum(np.power(vfpos[vroi],2),axis=(1,2))
 
-.. code:: python
+.. code-block:: python
 
     fig,ax = plt.subplots()
     ax.plot(ysum)
@@ -238,7 +238,7 @@ Sum of the squared positive vy
 .. image:: mesoderm_figs/output_28_1.png
 
 
-.. code:: python
+.. code-block:: python
 
     fig,ax = plt.subplots(figsize=(10,8))
     ax.imshow(vimg[roi][55])
@@ -262,7 +262,7 @@ mark germband extension which could be useful in itself.
 Let's try this on other samples to see if the feature is consistent
 ---------------------------------------------------------------------
 
-.. code:: python
+.. code-block:: python
 
     Dvimg = {}
     for f in fs:
@@ -272,7 +272,7 @@ Let's try this on other samples to see if the feature is consistent
             print('Video import failed',f)
 
 
-.. code:: python
+.. code-block:: python
 
     Dvf = {}
     for f in Dvimg.keys():
@@ -281,7 +281,7 @@ Let's try this on other samples to see if the feature is consistent
         except:
             print('Import failed',f)
 
-.. code:: python
+.. code-block:: python
 
     Dsum = {}
     for f in Dvimg.keys():
@@ -290,7 +290,7 @@ Let's try this on other samples to see if the feature is consistent
         Dsum[f] = np.sum(np.power(vfpos[vroi],2),axis=(1,2))
 
 
-.. code:: python
+.. code-block:: python
 
     for f in Dsum.keys():
         fig,ax = plt.subplots(1,2,figsize=(10,8))
@@ -328,7 +328,7 @@ Let's try this on other samples to see if the feature is consistent
 .. image:: mesoderm_figs/output_38_6.png
 
 
-.. code:: python
+.. code-block:: python
 
     Dsum.keys()
 
@@ -339,7 +339,7 @@ Let's try this on other samples to see if the feature is consistent
 
 
 
-.. code:: python
+.. code-block:: python
 
     maxsum = {
         '20180108_htl_glc_sc11_mmzm_rotate_brt':8,
@@ -358,7 +358,7 @@ mesoderm invagination will be more expedient.
 Check manual assignments
 --------------------------
 
-.. code:: python
+.. code-block:: python
 
     tpoints = pd.read_csv('mesoderm_invagination.csv')
     tpoints
@@ -432,7 +432,7 @@ Check manual assignments
 
 
 
-.. code:: python
+.. code-block:: python
 
     tpoints[tpoints['File']==f+'.avi'].values[-1,-1]
 
@@ -445,7 +445,7 @@ Check manual assignments
 
 
 
-.. code:: python
+.. code-block:: python
 
     for f in Dvimg.keys():
         fig,ax = plt.subplots(figsize=(10,8))
@@ -456,7 +456,7 @@ Check manual assignments
 Test track interpolation starting at mesoderm invagination
 -------------------------------------------------------------
 
-.. code:: python
+.. code-block:: python
 
     tracks = pd.read_csv('20181128-tracking.csv')
     tracks.head()
@@ -465,7 +465,7 @@ Test track interpolation starting at mesoderm invagination
 
 
 
-.. code:: python
+.. code-block:: python
 
     starts = tracks[tracks.t==0][['f','x','y']]
     starts.head()
@@ -535,11 +535,11 @@ Test track interpolation starting at mesoderm invagination
 
 
 
-.. code:: python
+.. code-block:: python
 
     test = starts[starts.f==f].reset_index()[['x','y']]
 
-.. code:: python
+.. code-block:: python
 
     for i in test.index:
         x,y = test.iloc[i]
@@ -555,7 +555,7 @@ Test track interpolation starting at mesoderm invagination
 
 
 
-.. code:: python
+.. code-block:: python
 
     Ltrack = []
     for f in Dvf.keys():
@@ -581,24 +581,24 @@ Test track interpolation starting at mesoderm invagination
 
 Manually code track calculation to debug
 
-.. code:: python
+.. code-block:: python
 
     vf = Dvf[f]
     strt = starts[starts.f==f].reset_index()[['x','y']]
     x0,y0 = strt.iloc[0]
 
-.. code:: python
+.. code-block:: python
 
     trange = range(maxsum[f],np.max(vf.tval))
     (trange)
 
 
-.. code:: python
+.. code-block:: python
 
     xpos = [x0]*(maxsum[f]+1)
     ypos = [y0]*(maxsum[f]+1)
 
-.. code:: python
+.. code-block:: python
 
     for t in trange:
         dx = vf.Ldx[t].ev(xpos[t],ypos[t])
@@ -607,7 +607,7 @@ Manually code track calculation to debug
         xpos.append(xpos[t] + dx*60)
         ypos.append(ypos[t] + dy*60)
 
-.. code:: python
+.. code-block:: python
 
     track.shape,len(trange)
 
@@ -620,14 +620,14 @@ Manually code track calculation to debug
 
 
 
-.. code:: python
+.. code-block:: python
 
     track = np.array([xpos,ypos])
     trackdf = pd.DataFrame({'x':track[0,:],'y':track[1,:],'t':vf.tval,
                             'track':[i]*track.shape[-1],
                             'name':['test']*track.shape[-1]})
 
-.. code:: python
+.. code-block:: python
 
     xpos
 
@@ -650,14 +650,14 @@ Manually code track calculation to debug
 Track visualization
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code:: python
+.. code-block:: python
 
     tracks = pd.concat(Ltrack,keys=list(Dvf.keys())
                       ).reset_index(
                       ).drop(columns=['level_1']
                       ).rename(columns={'level_0':'file'})
  
-.. code:: python
+.. code-block:: python
 
     for f in tracks['file'].unique():
         fig,ax = plt.subplots()
@@ -693,7 +693,7 @@ Track visualization
 .. image:: mesoderm_figs/output_65_6.png
 
 
-.. code:: python
+.. code-block:: python
 
     for f in tracks['file'].unique():
         gbeflow.make_track_movie(Dvimg[f],tracks[tracks.file==f],c='r',
