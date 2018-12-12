@@ -99,7 +99,36 @@ Wrangling the optical flow ouput data
 
 .. warning:: write about data wrangling for vector data
 
-``OpticalFlow.m`` returns 5 data objects that are saved to output files when using ``OpticalFlowOutput.m``. 
+``OpticalFlow.m`` returns 5 data objects ``[X,Y,Vx,Vy,mov]`` that are saved to output files when using ``OpticalFlowOutput.m``. Given a user input which defines the base of the output file names hereafter refered to as ``<name>``, ``OpticalFlowOutput`` saves the 5 data objects.
+
+.. csv-table:: Optical Flow Output
+    :header: Object, Filename, Description
+    :widths: 25, 25, 50
+    
+    X, <name>_X.csv, A vector with the unique x positions for the vector grid 
+    Y, <name>_Y.csv, A vector with the unique y positions for the vector grid
+    Vx, <name>_Vx.csv, Contains the X component of the velocity vector. An MxN matrix where there are M columns corresponding to time and N rows corresponding the the spatial positions stored in X and Y
+    Vy, <name>_Vy.csv, Contains the Y component of the velocity vector. An MxN matrix where there are M columns corresponding to time and N rows corresponding the the spatial positions stored in X and Y
+    mov, <name>.avi, A movie of the original input data with the corresponding vector field overlaid using green arrows.
+    
+The function :func:`gbeflow.tidy_vector_data()` loads the 4 vector files saved by optical flow ouput by looking for the root of the filename <name>. The four data files are compiled into a single dataframe that contains five columns: frame, x, y, vx, and vy. The dataframe which the function returns can be saved to a csv file using ``pandas.DataFrame.to_csv()``.
+
+In order to facilitate interpolation and plotting, we also want to transform the data into an array based structure as opposed to a tidy dataframe where each row corresponds to a single point/velocity vector. The function :func:`gbeflow.reshape_vector_data` accepts the dataframe output by :func:`gbeflow.tidy_vector_data` as an input. It creates a set of arrays that conform to the following dimensions: # of time points $\times$ # of unique x values $\times$ # of unique y values. The function returns five arrays following this convention: ``tt``,``xx``,``yy``,``vx``, and ``vy``. If we use the same index to select a value from each of the 5 arrays, we will get the t, x and y positions with the corresponding vx and vy velocity components.
+
+The following code is an example of how to import the results of optical flow after running the example code above.
+
+.. code-block:: python
+
+    import gbeflow
+
+    # Define file paths and names
+    outpath = 'abs/path/name'
+    
+    # Read in data to a single dataframe
+    df = gbeflow.tidy_vector_data(outpath)
+    
+    # Convert to array based format
+    tt,xx,yy,vx,vy = gbeflow.reshape_vector_data(df)
 
 Simulated Cell Tracking
 ------------------------
