@@ -13,8 +13,11 @@ Anaconda
 ^^^^^^^^^
 `Anaconda <https://www.anaconda.com>`_ is a distribution and package manager targeted for scientific computing. While Anaconda mostly focuses on python, it is capable with interfacing with other languages/packages as well. Several of the packages required for gbeflow have underlying C dependences that make independent installation difficult. Anaconda includes all of these packages and makes it simple to install any additional packages. gbeflow is written in Python 3, so we recommend installing the most up-to-date Anaconda installation for Python 3.
 
-Matlab
-^^^^^^^
+
+.. _matlabsetup:
+
+Matlab Setup
+^^^^^^^^^^^^^
 The optical flow algorithm which gbeflow relies on is written in Matlab `(Vig et al. 2016) <vig_>`_. For more information on optical flow and the algorithm, checkout :ref:`opticalflow`. For the purposes of installation and setup, all you need to know is that you need a local installation of Matlab on your computer to run steps involving the optical flow algorithm. gbeflow was developed using Matlab 2017b, but there are not any dependences known to this specific version. We will run Matlab scripts out of python so no Matlab knowledge is required. However, Matlab is currently only compatible with Python 3.6, so we will need to set up an environment to specifically run 3.6. Once we have the correct environment set up, we will install a matlab engine for python.
 
 .. _vig: https://www.sciencedirect.com/science/article/pii/S0006349516300339?via%3Dihub
@@ -66,7 +69,7 @@ When we are working in Jupyter Notebooks, nb_conda_kernels_ will provide the opt
 
 Matlab Engine Installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Matlab includes a python engine with its default installation. In order to install the engine as a python module, follow the instructions listed `here <matlabengine_>`_. Make sure that the python 3.6 environment is active by running ``source activate python36`` or ``activate python36``.
+Matlab includes a python engine with its default installation. In order to install the engine as a python module, follow the instructions listed `here <matlabengine_>`_. Make sure that the python 3.6 environment is active by running ``conda activate python36``.
 
 .. _matlabengine: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
 

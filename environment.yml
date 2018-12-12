@@ -23,7 +23,6 @@ dependencies:
   - pip:
     - bebi103
     - czifile
-    - matlabengineforpython
     - sphinx-rtd-theme
     - tifffile
 
