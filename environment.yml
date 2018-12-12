@@ -20,6 +20,7 @@ dependencies:
   - scikit-image
   - scipy
   - sphinx
+  - nb-conda-kernels
   - pip:
     - bebi103
     - czifile

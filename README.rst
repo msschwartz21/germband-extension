@@ -57,6 +57,8 @@ For simplicity, there is a script that enables you to setup a virtual environmen
 
 This script will create an anaconda virtual environment named python36. You can activate the environment by running ``conda activate python36``. When you are done with the environment run ``conda deactivate`` to return to the basic python environment.
 
+.. warning:: ``conda activate`` doesn't appear to work in powershell, but it does work from the Anaconda Prompt and Command.
+
 When we are working in Jupyter Notebooks, nb_conda_kernels_ will provide the option to launch the notebook from any available virtual environment including python36. Justin Bois has a great introduction to Jupyter notebooks available `here <bebi103_>`_.
 
 .. _nb_conda_kernels: https://github.com/Anaconda-Platform/nb_conda_kernels
@@ -72,6 +74,12 @@ Matlab Engine Installation
 Matlab includes a python engine with its default installation. In order to install the engine as a python module, follow the instructions listed `here <matlabengine_>`_. Make sure that the python 3.6 environment is active by running ``conda activate python36``.
 
 .. _matlabengine: https://www.mathworks.com/help/matlab/matlab_external/install-the-matlab-engine-for-python.html
+
+Troubleshooting installation problems
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+These notes are here to serve as a record for previously encountered problems, but undoubtably new problems will show up in the future. When I was working on the installation for the lab computer, Anaconda recommended that PATH variables not be set by Anaconda during the installation process. The result of this choice is that conda/python/etc. can be called from the Anaconda Prompt, but these commands are not available from any other terminal interface such as Command or Powershell. I ended up reinstalling Anaconda and choosing to install with the PATH variables and it hasn't caused any problems to date.
+
+Matlab is typically installed for all users, which means it requires administrator priveleges to make any changes to the directory. As a result, if we use a normal command prompt to try to run ``python setup.py install`` from within the Matlab directory, we are blocked from making changes since normal command interfaces do not have administrator priveleges. To get around this problem, Command or Anaconda Prompt can be launched with administrator priveleges by right clicking on the program to launch and selecting the "Run as Administrator" option. This administrator option should only be used when absolutely necessary, such as running the python installation for matlab.
 
 gbeflow Installation
 ^^^^^^^^^^^^^^^^^^^^^^
