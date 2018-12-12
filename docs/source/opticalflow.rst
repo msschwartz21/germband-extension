@@ -128,3 +128,5 @@ The following code is an example of how to import the results of optical flow af
     
     # Convert to array based format
     tt,xx,yy,vx,vy = gbeflow.reshape_vector_data(df)
+    
+.. _vig: https://www.sciencedirect.com/science/article/pii/S0006349516300339?via%3Dihub
