@@ -328,15 +328,6 @@ Let's try this on other samples to see if the feature is consistent
 .. image:: mesoderm_figs/output_38_6.png
 
 
-.. code-block:: python
-
-    Dsum.keys()
-
-
-.. parsed-literal::
-
-    dict_keys(['20180108_htl_glc_sc11_mmzm_rotate_brt', '20180108_htl_glc_sc9_mmzp_rotate_brt', '20180110_htl_glc-CreateImageSubset-01_sc10_wt_rotate_brt', '20180110_htl_glc-CreateImageSubset-02_sc11_htl_rotate_brt', '20180110_htl_glc_sc14_mmzp_rotate_brt', '20180110_htl_glc_sc15_mmzm_rotate_brt', '20180112_htlglc_tl_sc11_mmzp_rotate_brt'])
-
 
 
 .. code-block:: python
@@ -462,130 +453,10 @@ Test track interpolation starting at mesoderm invagination
     tracks.head()
 
 
-
-
-
 .. code-block:: python
 
     starts = tracks[tracks.t==0][['f','x','y']]
-    starts.head()
 
-
-
-
-.. raw:: html
-
-    <div>
-    <style scoped>
-        .dataframe tbody tr th:only-of-type {
-            vertical-align: middle;
-        }
-    
-        .dataframe tbody tr th {
-            vertical-align: top;
-        }
-    
-        .dataframe thead th {
-            text-align: right;
-        }
-    </style>
-    <table border="1" class="dataframe">
-      <thead>
-        <tr style="text-align: right;">
-          <th></th>
-          <th>f</th>
-          <th>x</th>
-          <th>y</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>0</th>
-          <td>20180108_htl_glc_sc11_mmzm_rotate_brt</td>
-          <td>1100.915678</td>
-          <td>598.755670</td>
-        </tr>
-        <tr>
-          <th>166</th>
-          <td>20180108_htl_glc_sc11_mmzm_rotate_brt</td>
-          <td>1067.214981</td>
-          <td>585.575513</td>
-        </tr>
-        <tr>
-          <th>332</th>
-          <td>20180108_htl_glc_sc11_mmzm_rotate_brt</td>
-          <td>1093.302284</td>
-          <td>566.283025</td>
-        </tr>
-        <tr>
-          <th>498</th>
-          <td>20180108_htl_glc_sc11_mmzm_rotate_brt</td>
-          <td>1062.785657</td>
-          <td>534.344330</td>
-        </tr>
-        <tr>
-          <th>664</th>
-          <td>20180108_htl_glc_sc2_mmzm_wp_rotate_brt</td>
-          <td>1293.196414</td>
-          <td>746.576518</td>
-        </tr>
-      </tbody>
-    </table>
-    </div>
-
-
-
-.. code-block:: python
-
-    test = starts[starts.f==f].reset_index()[['x','y']]
-
-.. code-block:: python
-
-    for i in test.index:
-        x,y = test.iloc[i]
-        print(x,y)
-
-
-.. parsed-literal::
-
-    1100.9156775841343 598.7556696428571
-    1067.2149814703523 585.5755133928571
-    1093.3022836538462 566.2830245535714
-    1062.785657051282 534.3443303571429
-
-
-
-.. code-block:: python
-
-    Ltrack = []
-    for f in Dvf.keys():
-    #     try:
-        Dvf[f].calc_track_set(starts[starts.f==f].reset_index()[['x','y']],
-                              60,name='dt60',timer=False,
-                             tmin=maxsum[f])
-        Ltrack.append(Dvf[f].tracks)
-    #     except:
-    #         print('error',f)
-
-
-.. parsed-literal::
-
-    100%|██████████| 166/166 [00:01<00:00, 136.76it/s]
-    100%|██████████| 166/166 [00:01<00:00, 127.99it/s]
-    100%|██████████| 166/166 [00:01<00:00, 165.79it/s]
-    100%|██████████| 166/166 [00:00<00:00, 179.98it/s]
-    100%|██████████| 166/166 [00:01<00:00, 104.40it/s]
-    100%|██████████| 166/166 [00:00<00:00, 182.44it/s]
-    100%|██████████| 166/166 [00:01<00:00, 150.42it/s]
-
-
-Manually code track calculation to debug
-
-.. code-block:: python
-
-    vf = Dvf[f]
-    strt = starts[starts.f==f].reset_index()[['x','y']]
-    x0,y0 = strt.iloc[0]
 
 .. code-block:: python
 
@@ -607,18 +478,6 @@ Manually code track calculation to debug
         xpos.append(xpos[t] + dx*60)
         ypos.append(ypos[t] + dy*60)
 
-.. code-block:: python
-
-    track.shape,len(trange)
-
-
-
-
-.. parsed-literal::
-
-    ((2, 166), 157)
-
-
 
 .. code-block:: python
 
@@ -626,24 +485,6 @@ Manually code track calculation to debug
     trackdf = pd.DataFrame({'x':track[0,:],'y':track[1,:],'t':vf.tval,
                             'track':[i]*track.shape[-1],
                             'name':['test']*track.shape[-1]})
-
-.. code-block:: python
-
-    xpos
-
-
-
-
-.. parsed-literal::
-
-    [1100.9156775841343,
-     1100.9156775841343,
-     1100.9156775841343,
-     1100.9156775841343,
-     1100.9156775841343,
-     1100.9156775841343,
-     1100.9156775841343,
-     1100.9156775841343]
 
 
 
@@ -698,17 +539,6 @@ Track visualization
     for f in tracks['file'].unique():
         gbeflow.make_track_movie(Dvimg[f],tracks[tracks.file==f],c='r',
                                 name='20181202_'+f+'_tracks')
-
-
-.. parsed-literal::
-
-    100%|██████████| 155/155 [00:22<00:00,  5.23it/s]
-    100%|██████████| 155/155 [00:24<00:00,  7.64it/s]
-    100%|██████████| 166/166 [00:18<00:00,  9.37it/s]
-    100%|██████████| 166/166 [00:18<00:00,  8.30it/s]
-    100%|██████████| 166/166 [00:25<00:00,  6.56it/s]
-    100%|██████████| 166/166 [00:18<00:00,  9.80it/s]
-    100%|██████████| 168/168 [00:21<00:00,  7.46it/s]
 
 
 Attempting to start interpolating the tracks at the time of mesoderm
